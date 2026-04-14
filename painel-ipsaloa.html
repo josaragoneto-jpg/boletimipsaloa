@@ -785,6 +785,8 @@
 <div class="config-bar" id="config-bar">
   <span>🔑 Token GitHub:</span>
   <input type="password" id="github-token" placeholder="Cole aqui seu Personal Access Token (ghp_...)" oninput="salvarToken(this.value)">
+  <span>📦 Repositório:</span>
+  <input type="text" id="github-repo" placeholder="usuario/repositorio" oninput="salvarRepo(this.value)">
   <span id="token-status">— cole o token para ativar a publicação</span>
 </div>
 
@@ -1174,7 +1176,7 @@ Ao ingressar em nosso templo, você reconhece e concorda com a utilização de s
 // ══════════════════════════════════════════════════════════════
 //  CONFIGURAÇÃO
 // ══════════════════════════════════════════════════════════════
-const REPO = 'helder-ssouza/ipsaloa_automacao';
+const REPO_PADRAO = 'helder-ssouza/ipsaloa_automacao';
 const ARQUIVO = 'index.html';
 
 // ══════════════════════════════════════════════════════════════
@@ -1183,8 +1185,10 @@ const ARQUIVO = 'index.html';
 function limparCache() {
   if (!confirm('Limpar todos os dados em cache?\n\nOs campos preenchidos serão perdidos, mas o token GitHub será mantido.')) return;
   const token = getToken();
+  const repo = getRepo();
   localStorage.clear();
   if (token) localStorage.setItem('ipsaloa_token', token);
+  if (repo) localStorage.setItem('ipsaloa_repo', repo);
   mostrarStatus('✅ Cache limpo! Recarregue a página.');
   setTimeout(() => location.reload(), 1500);
 }
@@ -1199,18 +1203,33 @@ function salvarToken(v) {
 function getToken() {
   return localStorage.getItem('ipsaloa_token') || '';
 }
+function salvarRepo(v) {
+  const repo = v.trim();
+  if (repo) {
+    localStorage.setItem('ipsaloa_repo', repo);
+  } else {
+    localStorage.removeItem('ipsaloa_repo');
+  }
+  atualizarStatusToken();
+}
+function getRepo() {
+  return localStorage.getItem('ipsaloa_repo') || REPO_PADRAO;
+}
 function atualizarStatusToken() {
   const t = getToken();
+  const repo = getRepo();
   const bar = document.getElementById('config-bar');
   const st = document.getElementById('token-status');
-  const inp = document.getElementById('github-token');
-  if (t) {
-    inp.value = t;
+  const inpToken = document.getElementById('github-token');
+  const inpRepo = document.getElementById('github-repo');
+  if (inpToken && inpToken.value !== t) inpToken.value = t;
+  if (inpRepo && inpRepo.value !== repo) inpRepo.value = repo;
+  if (t && repo) {
     bar.className = 'config-bar ok';
-    st.textContent = '✅ Token salvo neste navegador';
+    st.textContent = `✅ Token salvo e publicação apontando para ${repo}`;
   } else {
     bar.className = 'config-bar';
-    st.textContent = '— cole o token para ativar a publicação';
+    st.textContent = '— informe token e repositório para ativar a publicação';
   }
 }
 
@@ -2012,8 +2031,13 @@ function patchHtml(htmlOriginal, d) {
 // ══════════════════════════════════════════════════════════════
 async function publicar() {
   const token = getToken();
+  const repo = getRepo().trim();
   if (!token) {
     mostrarStatus('❌ Cole seu token GitHub na barra de configuração', true);
+    return;
+  }
+  if (!repo || !repo.includes('/')) {
+    mostrarStatus('❌ Informe o repositório no formato usuario/repositorio', true);
     return;
   }
   if (!await abrirModalConfirmacaoPublicacao()) {
@@ -2028,7 +2052,7 @@ async function publicar() {
 
   try {
     // 1. Busca o arquivo atual + SHA
-    const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/${ARQUIVO}`, {
+    const resp = await fetch(`https://api.github.com/repos/${repo}/contents/${ARQUIVO}`, {
       headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
     });
 
@@ -2132,7 +2156,7 @@ async function publicar() {
     encoded.forEach(b => binary += String.fromCharCode(b));
     const conteudoBase64 = btoa(binary);
 
-    const respPut = await fetch(`https://api.github.com/repos/${REPO}/contents/${ARQUIVO}`, {
+    const respPut = await fetch(`https://api.github.com/repos/${repo}/contents/${ARQUIVO}`, {
       method: 'PUT',
       headers: {
         'Authorization': `token ${token}`,
