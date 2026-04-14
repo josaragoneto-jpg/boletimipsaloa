@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Edição — Boletim IP Saloá</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --verde: #0B5D3B;
+      --verde2: #1C6B4A;
+      --verde-claro: #12A05A;
+      --fundo: #F0F4F2;
+      --branco: #ffffff;
+      --borda: rgba(11,93,59,0.15);
+      --texto: #1a241f;
+      --texto-suave: #5c6e64;
+      --sombra: 0 4px 16px rgba(11,93,59,0.08);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background:var(--fundo); color:var(--texto); min-height:100vh; }
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--verde);
+      color: #fff;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    }
+    .header h1 { font-size: 1.1rem; font-weight: 700; letter-spacing: 0.03em; }
+    .header p { font-size: 0.78rem; opacity: 0.75; margin-top: 2px; }
+    .btn-publicar {
+      background: #fff;
+      color: var(--verde);
+      border: none;
+      padding: 0.65rem 1.5rem;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .btn-publicar:hover { background: #e8f5ee; }
+    .btn-publicar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── CONFIGURAÇÃO TOKEN ── */
+    .config-bar {
+      background: #fff3cd;
+      border-bottom: 1px solid #ffc107;
+      padding: 0.7rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.82rem;
+      color: #7a5a00;
+    }
+    .config-bar input {
+      flex: 1;
+      max-width: 340px;
+      padding: 0.4rem 0.8rem;
+      border: 1px solid #ffc107;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-family: monospace;
+      background: #fffbe6;
+    }
+    .config-bar.ok { background: #e8f5ee; border-color: var(--borda); color: var(--verde2); }
+    .config-bar.ok input { border-color: var(--borda); background: #f0f9f4; }
+
+    /* ── ABAS ── */
+    .abas-nav {
+      background: var(--branco);
+      border-bottom: 1px solid var(--borda);
+      padding: 0 2rem;
+      display: flex;
+      gap: 0;
+    }
+    .aba-nav-btn {
+      padding: 0.9rem 1.4rem;
+      border: none;
+      background: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--texto-suave);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      letter-spacing: 0.03em;
+    }
+    .aba-nav-btn:hover { color: var(--verde); }
+    .aba-nav-btn.ativa { color: var(--verde); border-bottom-color: var(--verde); }
+
+    /* ── CONTEÚDO ── */
+    .aba-conteudo { display: none; padding: 2rem; max-width: 860px; margin: 0 auto; }
+    .aba-conteudo.ativa { display: block; }
+
+    /* ── GRUPOS DE CAMPO ── */
+    .secao-titulo {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--verde2);
+      background: rgba(11,93,59,0.05);
+      border-left: 3px solid var(--verde2);
+      padding: 0.5rem 0.8rem;
+      margin: 1.8rem 0 1rem;
+      border-radius: 0 6px 6px 0;
+    }
+    .secao-titulo:first-child { margin-top: 0; }
+    .campo { margin-bottom: 1.2rem; }
+    .campo label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--texto-suave);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.02em;
+    }
+    .campo input[type="text"],
+    .campo textarea {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-family: inherit;
+      color: var(--texto);
+      background: var(--branco);
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    .secao-marcador {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.9rem 1rem;
+      margin: 0 0 1rem;
+      background: rgba(11,93,59,0.05);
+      border: 1px solid var(--borda);
+      border-radius: 12px;
+    }
+    .secao-marcador input[type="checkbox"] {
+      width: 1.05rem;
+      height: 1.05rem;
+      accent-color: var(--verde);
+      flex: 0 0 auto;
+    }
+    .secao-marcador strong {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--verde);
+      margin-bottom: 0.1rem;
+    }
+    .secao-marcador span {
+      display: block;
+      font-size: 0.76rem;
+      color: var(--texto-suave);
+      line-height: 1.5;
+    }
+    .resumo-publicacao {
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.4rem;
+      box-shadow: var(--sombra);
+    }
+    .resumo-publicacao h3 {
+      font-size: 0.82rem;
+      color: var(--verde);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .resumo-publicacao-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+    .resumo-publicacao-bloco {
+      background: rgba(11,93,59,0.04);
+      border: 1px solid rgba(11,93,59,0.08);
+      border-radius: 12px;
+      padding: 0.85rem 0.95rem;
+    }
+    .resumo-publicacao-bloco.mantido {
+      background: rgba(92,110,100,0.05);
+      border-color: rgba(92,110,100,0.12);
+    }
+    .resumo-publicacao-bloco strong {
+      display: block;
+      font-size: 0.78rem;
+      margin-bottom: 0.5rem;
+      color: var(--texto);
+    }
+    .resumo-publicacao-bloco ul {
+      margin: 0;
+      padding-left: 1rem;
+      color: var(--texto-suave);
+      font-size: 0.76rem;
+      line-height: 1.6;
+    }
+    .resumo-publicacao-rodape {
+      margin-top: 0.8rem;
+      font-size: 0.74rem;
+      color: var(--texto-suave);
+      line-height: 1.5;
+    }
+    .modal-confirmacao {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 30, 24, 0.58);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      z-index: 9999;
+      backdrop-filter: blur(4px);
+    }
+    .modal-confirmacao.aberto { display: flex; }
+    .modal-confirmacao-card {
+      width: min(680px, 100%);
+      background: var(--branco);
+      border-radius: 18px;
+      border: 1px solid var(--borda);
+      box-shadow: 0 22px 60px rgba(0,0,0,0.24);
+      padding: 1.25rem 1.25rem 1.1rem;
+    }
+    .modal-confirmacao-topo {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .modal-confirmacao-topo h3 {
+      font-size: 1rem;
+      color: var(--verde);
+      margin-bottom: 0.25rem;
+    }
+    .modal-confirmacao-topo p {
+      font-size: 0.8rem;
+      color: var(--texto-suave);
+      line-height: 1.6;
+    }
+    .modal-confirmacao-fechar {
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 999px;
+      border: 1px solid var(--borda);
+      background: rgba(11,93,59,0.04);
+      color: var(--verde);
+      font-size: 1rem;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .modal-confirmacao-corpo {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .modal-confirmacao-bloco {
+      border-radius: 14px;
+      padding: 0.95rem 1rem;
+      border: 1px solid rgba(11,93,59,0.08);
+      background: rgba(11,93,59,0.04);
+    }
+    .modal-confirmacao-bloco.mantido {
+      background: rgba(92,110,100,0.05);
+      border-color: rgba(92,110,100,0.12);
+    }
+    .modal-confirmacao-bloco strong {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--texto);
+      margin-bottom: 0.55rem;
+    }
+    .modal-confirmacao-bloco ul {
+      margin: 0;
+      padding-left: 1rem;
+      color: var(--texto-suave);
+      font-size: 0.77rem;
+      line-height: 1.6;
+    }
+    .modal-confirmacao-rodape {
+      font-size: 0.75rem;
+      color: var(--texto-suave);
+      line-height: 1.55;
+      margin-bottom: 1rem;
+    }
+    .modal-confirmacao-acoes {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+    .btn-modal-secundario,
+    .btn-modal-principal {
+      border: none;
+      border-radius: 999px;
+      padding: 0.72rem 1.2rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-modal-secundario {
+      background: rgba(92,110,100,0.12);
+      color: var(--texto);
+    }
+    .btn-modal-principal {
+      background: var(--verde);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(11,93,59,0.18);
+    }
+    .campo input:focus,
+    .campo textarea:focus {
+      outline: none;
+      border-color: var(--verde-claro);
+      box-shadow: 0 0 0 3px rgba(18,160,90,0.1);
+    }
+    .campo textarea { min-height: 100px; line-height: 1.6; }
+    .campo textarea.grande { min-height: 180px; }
+    .campo textarea.pequena { min-height: 70px; }
+    .campo .dica {
+      font-size: 0.72rem;
+      color: var(--texto-suave);
+      margin-top: 0.3rem;
+      line-height: 1.5;
+    }
+
+    /* ── GERENCIADOR DE AVISOS ── */
+    #lista-avisos { margin-bottom: 1rem; }
+    .aviso-card {
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      box-shadow: var(--sombra);
+    }
+    .aviso-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.8rem;
+    }
+    .aviso-card-header select {
+      flex: 1;
+      padding: 0.4rem 0.6rem;
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      font-size: 0.82rem;
+      color: var(--texto);
+      background: var(--fundo);
+    }
+    .btn-remover-aviso {
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 6px;
+      padding: 0.35rem 0.7rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-add-aviso {
+      background: rgba(11,93,59,0.06);
+      border: 1px dashed var(--verde2);
+      color: var(--verde2);
+      border-radius: 8px;
+      padding: 0.7rem;
+      width: 100%;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-add-aviso:hover { background: rgba(11,93,59,0.1); }
+    .aviso-imagem-preview {
+      max-width: 100%;
+      max-height: 150px;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+      display: none;
+    }
+    .aviso-fixo {
+      border-color: rgba(11,93,59,0.35) !important;
+      background: #f0f9f4;
+    }
+    .manter-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--verde2);
+      cursor: pointer;
+      margin-top: 0.6rem;
+      padding: 0.4rem 0.8rem;
+      background: rgba(11,93,59,0.06);
+      border-radius: 6px;
+      border: 1px solid rgba(11,93,59,0.15);
+    }
+    .manter-label input { cursor: pointer; }
+
+    /* ── ANIVERSARIANTES ── */
+    #lista-aniversariantes { margin-bottom: 0.8rem; }
+    .aniv-linha {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      align-items: center;
+    }
+    .aniv-linha input[type="text"] {
+      padding: 0.45rem 0.7rem;
+      border: 1px solid var(--borda);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-family: inherit;
+      background: var(--branco);
+    }
+    .aniv-linha input.dia { width: 60px; text-align: center; font-weight: 700; }
+    .aniv-linha input.nome { flex: 1; }
+    .btn-remover-aniv {
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 6px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .btn-add-aniv {
+      background: rgba(11,93,59,0.06);
+      border: 1px dashed var(--verde2);
+      color: var(--verde2);
+      border-radius: 8px;
+      padding: 0.6rem;
+      width: 100%;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ── STATUS ── */
+    #status-bar {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 2rem;
+      background: var(--verde);
+      color: #fff;
+      padding: 0.75rem 1.4rem;
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 9999;
+      max-width: 340px;
+    }
+    #status-bar.erro { background: #dc2626; }
+    #status-bar.visivel { display: block; animation: slideUp 0.3s ease; }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* ── LITURGIA AJUDA ── */
+    .liturgia-dica {
+      background: #e8f5ee;
+      border: 1px solid rgba(11,93,59,0.2);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.78rem;
+      color: var(--verde2);
+      line-height: 1.6;
+    }
+    .liturgia-dica strong { display: block; margin-bottom: 0.3rem; }
+
+    /* ── CARD INSTITUCIONAL ── */
+    .card-inst {
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--sombra);
+    }
+  .card-inst h4 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--verde2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--borda);
+    }
+
+    /* Grid dois colunas */
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .grid2 { grid-template-columns: 1fr; } .abas-nav { overflow-x: auto; } }
+
+    /* ── REFINOS VISUAIS ALINHADOS AO BOLETIM ── */
+    body {
+      font-family: 'Lato', 'Segoe UI', system-ui, sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(11,93,59,0.08), transparent 28%),
+        linear-gradient(180deg, #f7faf8 0%, #edf4f0 100%);
+      color: var(--texto);
+    }
+
+    h1, .secao-titulo, .card-inst h4 {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .header {
+      position: relative;
+      padding: 1.5rem 2rem;
+      background:
+        linear-gradient(135deg, rgba(11,93,59,0.98) 0%, rgba(28,107,74,0.96) 60%, rgba(18,160,90,0.9) 100%);
+      overflow: hidden;
+    }
+    @media (max-width: 760px) {
+      .resumo-publicacao-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-confirmacao-corpo {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .header::after {
+      content: '';
+      position: absolute;
+      inset: auto -10% -55% auto;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 72%);
+      pointer-events: none;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.2rem;
+    }
+
+    .header p {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-top: 0.15rem;
+      max-width: 680px;
+      line-height: 1.6;
+    }
+
+    .header-copy {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-actions {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-secundario {
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.28);
+      padding: 0.62rem 1rem;
+      border-radius: 100px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .btn-secundario:hover {
+      background: rgba(255,255,255,0.18);
+      transform: translateY(-1px);
+    }
+
+    .btn-publicar {
+      box-shadow: 0 10px 26px rgba(7, 35, 23, 0.22);
+    }
+
+    .config-bar {
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(11,93,59,0.1);
+      color: var(--verde2);
+      flex-wrap: wrap;
+      row-gap: 0.5rem;
+    }
+
+    .config-bar input {
+      min-width: 260px;
+      background: rgba(255,255,255,0.85);
+      border-color: rgba(11,93,59,0.15);
+    }
+
+    .config-bar.ok {
+      background: rgba(232,245,238,0.9);
+    }
+
+    .abas-nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 20px rgba(11,93,59,0.05);
+    }
+
+    .aba-nav-btn {
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .painel-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1.2rem 1.2rem 5rem;
+    }
+
+    .aba-conteudo {
+      max-width: 940px;
+      padding: 1.6rem 1.4rem 2rem;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(11,93,59,0.08);
+      border-radius: 24px;
+      box-shadow: 0 18px 42px rgba(11,93,59,0.07);
+      margin-top: 1rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .aba-intro {
+      background: linear-gradient(135deg, rgba(11,93,59,0.08), rgba(18,160,90,0.03));
+      border: 1px solid rgba(11,93,59,0.12);
+      border-radius: 18px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.35rem;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .aba-intro strong {
+      display: block;
+      color: var(--verde);
+      font-size: 0.84rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 0.35rem;
+    }
+
+    .aba-intro p {
+      font-size: 0.86rem;
+      color: var(--texto-suave);
+      line-height: 1.65;
+    }
+
+    .campo input[type="text"],
+    .campo textarea,
+    .campo select,
+    .aniv-linha input[type="text"],
+    .aviso-card-header select {
+      font-family: 'Lato', sans-serif;
+      background: rgba(255,255,255,0.92);
+    }
+
+    .secao-titulo {
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      background: linear-gradient(90deg, rgba(11,93,59,0.1), rgba(11,93,59,0.03));
+      border-left-width: 4px;
+      border-radius: 0 14px 14px 0;
+    }
+
+    .aviso-card,
+    .card-inst {
+      border-radius: 18px;
+      box-shadow: 0 12px 32px rgba(11,93,59,0.08);
+    }
+
+    .painel-meta {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin: 0.4rem 0 1.4rem;
+    }
+
+    .meta-card {
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(11,93,59,0.1);
+      border-radius: 18px;
+      padding: 0.95rem 1rem;
+      box-shadow: 0 10px 24px rgba(11,93,59,0.05);
+    }
+
+    .meta-card strong {
+      display: block;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--verde2);
+      margin-bottom: 0.35rem;
+    }
+
+    .meta-card span {
+      display: block;
+      font-size: 0.86rem;
+      color: var(--texto-suave);
+      line-height: 1.55;
+    }
+
+    .dica-compartilhar {
+      margin-top: 0.75rem;
+      padding: 0.85rem 0.95rem;
+      border-radius: 12px;
+      background: rgba(11,93,59,0.05);
+      border: 1px solid rgba(11,93,59,0.1);
+      color: var(--verde2);
+      font-size: 0.76rem;
+      line-height: 1.55;
+    }
+
+    .campo select {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--texto);
+    }
+
+    @media (max-width: 820px) {
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .painel-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .painel-shell {
+        padding-inline: 0.8rem;
+      }
+
+      .aba-conteudo {
+        padding: 1.2rem 1rem 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-copy">
+    <h1>Painel Editorial — Boletim IP Saloá</h1>
+    <p>Atualize o conteúdo semanal do boletim digital, preserve os dados institucionais e publique no GitHub com o mesmo padrão visual e funcional do boletim de Saloá.</p>
+  </div>
+  <div class="header-actions">
+    <button onclick="limparCache()" class="btn-secundario">🗑️ Limpar cache</button>
+    <button class="btn-publicar" onclick="publicar()" id="btn-pub">🚀 Publicar no GitHub</button>
+  </div>
+</div>
+
+<!-- CONFIG TOKEN -->
+<div class="config-bar" id="config-bar">
+  <span>🔑 Token GitHub:</span>
+  <input type="password" id="github-token" placeholder="Cole aqui seu Personal Access Token (ghp_...)" oninput="salvarToken(this.value)">
+  <span id="token-status">— cole o token para ativar a publicação</span>
+</div>
+
+<!-- ABAS NAV -->
+<div class="abas-nav">
+  <button class="aba-nav-btn ativa" onclick="mudarAba('semanal', this)">📅 Semanal</button>
+  <button class="aba-nav-btn" onclick="mudarAba('avisos', this)">📢 Avisos</button>
+  <button class="aba-nav-btn" onclick="mudarAba('mensal', this)">🎂 Mensal</button>
+  <button class="aba-nav-btn" onclick="mudarAba('institucional', this)">🏛️ Institucional</button>
+  <button class="aba-nav-btn" onclick="mudarAba('planejamento', this)">🗓️ Planejamento</button>
+</div>
+
+<div class="painel-shell">
+  <div class="painel-meta">
+    <div class="meta-card">
+      <strong>Fluxo Semanal</strong>
+      <span>Atualize data, devocional, liturgias e avisos. Esses são os blocos que mais mudam a cada edição.</span>
+    </div>
+    <div class="meta-card">
+      <strong>Compartilhamento</strong>
+      <span>Avisos e devocional publicados aqui seguem o fluxo de compartilhamento do boletim digital automaticamente.</span>
+    </div>
+    <div class="meta-card">
+      <strong>Publicação</strong>
+      <span>O painel aplica alterações sobre o `index.html` atual do boletim para preservar layout, scripts e recursos novos.</span>
+    </div>
+  </div>
+  <div class="resumo-publicacao" id="resumo-publicacao">
+    <h3>Antes de Publicar</h3>
+    <div class="resumo-publicacao-grid">
+      <div class="resumo-publicacao-bloco">
+        <strong>Será atualizado</strong>
+        <ul id="resumo-atualiza"></ul>
+      </div>
+      <div class="resumo-publicacao-bloco mantido">
+        <strong>Será mantido como está</strong>
+        <ul id="resumo-mantem"></ul>
+      </div>
+    </div>
+    <div class="resumo-publicacao-rodape" id="resumo-publicacao-rodape"></div>
+  </div>
+
+<!-- ════════════════════════════════════════════
+     ABA SEMANAL
+════════════════════════════════════════════ -->
+<div class="aba-conteudo ativa" id="aba-semanal">
+  <div class="aba-intro">
+    <strong>Rotina Principal</strong>
+    <p>Use esta aba para a edição da semana: data, devocional, liturgias e símbolo de fé. O objetivo aqui é manter o conteúdo editorial alinhado com o boletim digital sem alterar a estrutura do site.</p>
+  </div>
+
+  <div class="secao-titulo">Capa</div>
+  <div class="campo">
+    <label>Data do Domingo</label>
+    <input type="text" id="data-boletim" placeholder="Ex: 20 de abril de 2026">
+    <div class="dica">Aparece na capa, no título da página e nos cabeçalhos da liturgia.</div>
+  </div>
+
+  <div class="secao-titulo">Devocional da Semana</div>
+  <div class="campo">
+    <label>Título do Devocional</label>
+    <input type="text" id="devoc-titulo" placeholder="Ex: COMO TER PAZ COM DEUS...">
+  </div>
+  <div class="campo">
+    <label>Referência Bíblica</label>
+    <input type="text" id="devoc-ref" placeholder="Ex: Hebreus 9.1-28">
+  </div>
+  <div class="campo">
+    <label>Texto do Devocional</label>
+    <textarea class="grande" id="devoc-texto" placeholder="Cole aqui o texto corrido do devocional. Separe os parágrafos com uma linha em branco. O sistema formata automaticamente."></textarea>
+    <div class="dica">Separe os parágrafos com uma linha em branco. Não precisa usar tags HTML.</div>
+    <div class="dica-compartilhar">No boletim publicado, a devocional terá fluxo de compartilhamento próprio. O link compartilhado abrirá a seção diretamente no modo de leitura da devocional.</div>
+  </div>
+  <div class="campo">
+    <label>Assinatura do Autor</label>
+    <input type="text" id="devoc-autor" placeholder="Ex: Rev. Aragão Neto">
+  </div>
+
+  <div class="secao-titulo">Liturgia — Escola Dominical</div>
+  <div class="liturgia-dica">
+    <strong>Como preencher a liturgia:</strong>
+    Use MAIÚSCULAS para os títulos das seções (ex: ADORAÇÃO E LOUVOR). Use uma linha por evento. O sistema vai formatar automaticamente separando seções de eventos. Hinos ficam em negrito quando escritos como: Hino NC: 014 – Louvor.
+  </div>
+  <div class="campo">
+    <label>Liturgia da Escola Dominical</label>
+    <textarea class="grande" id="lit-ed" placeholder="ADORAÇÃO E LOUVOR
+Leitura Bíblica: Mateus 7.24-27
+Cânticos Congregacionais
+Oração de Adoração
+
+CONFISSÃO
+Leitura Bíblica: Mateus 7.7-12
+Hino NC: 014 – Louvor.
+Oração de Consagração"></textarea>
+  </div>
+
+  <div class="secao-titulo">Liturgia — Culto de Celebração</div>
+  <div class="campo">
+    <label>Liturgia do Culto de Celebração</label>
+    <textarea class="grande" id="lit-cel" placeholder="ADORAÇÃO E LOUVOR
+Leitura Bíblica: Romanos 1.8-17
+Cânticos Congregacionais
+Oração de Adoração
+
+CONFISSÃO
+Leitura Bíblica: Romanos 1.18-27
+Oração de Confissão
+
+EDIFICAÇÃO
+Mensagem: Rev. Aragão Neto
+TÍTULO DO SERMÃO
+Referência bíblica do sermão
+Oração Final
+Bênção Apostólica"></textarea>
+    <div class="dica">Na seção EDIFICAÇÃO, a 2ª linha após "Mensagem:" será o título do sermão (em negrito), a 3ª será a referência bíblica.</div>
+  </div>
+
+  <div class="secao-titulo">Símbolo de Fé</div>
+  <div class="campo">
+    <label>Nome do Documento <span style="font-weight:400;">(aparece no cabeçalho da seção)</span></label>
+    <input type="text" id="catec-nome" placeholder="Ex: Breve Catecismo de Westminster, Confissão de Fé de Westminster, Credo Apostólico...">
+    <div class="dica">Digite o nome exato do símbolo que será exibido no boletim esta semana.</div>
+  </div>
+  <div class="campo">
+    <label>Pergunta / Afirmação</label>
+    <input type="text" id="catec-pergunta" placeholder="Ex: Pergunta 2. Qual a regra que Deus nos deu... / Capítulo I. Das Sagradas Escrituras...">
+  </div>
+  <div class="campo">
+    <label>Resposta / Texto</label>
+    <textarea id="catec-resposta" placeholder="Cole aqui a resposta ou o texto do artigo/cápitulo."></textarea>
+  </div>
+  <div class="campo">
+    <label>Referências Bíblicas <span style="font-weight:400;">(opcional)</span></label>
+    <textarea class="pequena" id="catec-refs" placeholder="1 2Tm 3.16; Is 8.20; Lc 16.29,31&#10;2 Gl 1.8,9; 1Co 2.13"></textarea>
+    <div class="dica">Uma referência por linha. Deixe em branco se não houver.</div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════════
+     ABA AVISOS
+════════════════════════════════════════════ -->
+<div class="aba-conteudo" id="aba-avisos">
+  <div class="aba-intro">
+    <strong>Avisos Compartilháveis</strong>
+    <p>Todo aviso criado aqui passa a ser compartilhável automaticamente no boletim digital. O título ajuda a formar o identificador do link compartilhado, e o texto do card vira a base do resumo enviado na mensagem.</p>
+  </div>
+
+  <div class="secao-titulo">Avisos da Igreja</div>
+  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1.2rem; line-height:1.7;">
+    Adicione quantos avisos precisar. Cada aviso pode ser só texto, só imagem, ou imagem com texto.<br>
+    Marque <strong>"Manter semana que vem"</strong> nos avisos que devem continuar na próxima edição — eles já virão carregados automaticamente.<br>
+    O aviso de <strong>Uso de Imagem</strong> fica na aba <strong>Institucional</strong> e é editável lá.<br>
+    Avisos com imagem também receberão botão de download no boletim final.
+  </p>
+
+  <div id="lista-avisos"></div>
+  <button class="btn-add-aviso" onclick="addAviso()">+ Adicionar Aviso</button>
+
+</div>
+
+<!-- ════════════════════════════════════════════
+     ABA MENSAL
+════════════════════════════════════════════ -->
+<div class="aba-conteudo" id="aba-mensal">
+  <div class="aba-intro">
+    <strong>Conteúdo Recorrente</strong>
+    <p>Esta aba reúne informações que não costumam mudar toda semana. Atualize apenas quando houver alteração real no mês ou na lista de aniversariantes.</p>
+  </div>
+  <label class="secao-marcador">
+    <input type="checkbox" id="toggle-aniversariantes" checked>
+    <span>
+      <strong>Atualizar aniversariantes ao publicar</strong>
+      Quando este marcador estiver ativo, a arte de aniversariantes será atualizada. Desmarcado, ela permanece exatamente como está no boletim atual.
+    </span>
+  </label>
+
+  <div class="secao-titulo">Aniversariantes do Mês</div>
+  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1rem;">
+    Atualize apenas quando mudar. Informe o dia (número) e o nome completo.
+  </p>
+  <div id="lista-aniversariantes"></div>
+  <button class="btn-add-aniv" onclick="addAniversariante()">+ Adicionar Aniversariante</button>
+
+</div>
+
+<!-- ════════════════════════════════════════════
+     ABA INSTITUCIONAL
+════════════════════════════════════════════ -->
+<div class="aba-conteudo" id="aba-institucional">
+  <div class="aba-intro">
+    <strong>Base Institucional</strong>
+    <p>Esses dados sustentam seções permanentes do boletim. Edite com cuidado para não substituir informações estáveis por conteúdo semanal.</p>
+  </div>
+  <label class="secao-marcador">
+    <input type="checkbox" id="toggle-institucional" checked>
+    <span>
+      <strong>Atualizar institucional ao publicar</strong>
+      Controla liderança, dados bancários e o aviso fixo de uso de imagem. Desmarcado, o boletim mantém a versão institucional já publicada.
+    </span>
+  </label>
+
+  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1.5rem; padding: 0.8rem 1rem; background:#fff3cd; border-radius:8px; border:1px solid #ffc107;">
+    ⚠️ Estas informações mudam raramente (anual ou eventual). Edite apenas quando necessário.
+  </p>
+
+  <div class="secao-titulo">Pastor e Conselho</div>
+  <div class="card-inst">
+    <h4>Pastor Designado</h4>
+    <div class="campo">
+      <label>Nome e Telefone</label>
+      <input type="text" id="pastor-nome" placeholder="Rev. José Aragão Neto - (87) 9 8174-0995">
+    </div>
+  </div>
+
+  <div class="card-inst">
+    <h4>Membros do Conselho</h4>
+    <div class="campo">
+      <label>Lista (um por linha, formato: Nome - Telefone)</label>
+      <textarea id="conselho-membros" placeholder="Rev. José Aragão Neto - (87) 9 8174-0995
+Presb. Adriano Leite de Melo - (87) 9 8117-7908
+Presb. Fábio Ferreira da Silva - (87) 9 8124-4107
+Presb. José Ailton Carlos - (87) 9 8102-8231"></textarea>
+    </div>
+    <div class="grid2">
+      <div class="campo">
+        <label>Presidente</label>
+        <input type="text" id="conselho-presidente" placeholder="Rev. José Aragão Neto - (87) 9 8174-0995">
+      </div>
+      <div class="campo">
+        <label>Vice-Presidente</label>
+        <input type="text" id="conselho-vice" placeholder="Presb. Fábio Ferreira da Silva">
+      </div>
+      <div class="campo">
+        <label>Secretário</label>
+        <input type="text" id="conselho-secretario" placeholder="Presb. Adriano Leite de Melo">
+      </div>
+      <div class="campo">
+        <label>Representante no PGAR</label>
+        <input type="text" id="conselho-representante" placeholder="Presb. José Ailton Carlos">
+      </div>
+    </div>
+  </div>
+
+  <div class="secao-titulo">Junta Diaconal</div>
+  <div class="card-inst">
+    <h4>Diáconos</h4>
+    <div class="campo">
+      <label>Lista de Diáconos (um por linha)</label>
+      <textarea class="pequena" id="diaconos-lista" placeholder="Diác. Luiz Júnior Vilela da Costa
+Diác. Marcos Clementino de Almeida
+Diác. Miguel da Silva Neto"></textarea>
+    </div>
+  </div>
+
+  <div class="secao-titulo">Escola Bíblica Dominical</div>
+  <div class="card-inst">
+    <h4>Superintendência e Professores</h4>
+    <div class="campo">
+      <label>Texto completo da EBD (formatação livre)</label>
+      <textarea class="grande" id="ebd-lideranca" placeholder="SUPERINTENDENTES:
+Presb. Fábio Ferreira da Silva - (87) 9 8124-4107
+Nathália Valença Marino Aragão - (87) 9 8167-3725
+
+PROFESSORES:
+Classe Adultos: Rev. Aragão Neto.
+Classe Infantil (Manhã): Nathália Valença Marino Aragão, Elizabete Barbosa Cavalcante."></textarea>
+    </div>
+  </div>
+
+  <div class="secao-titulo">Dados Bancários / PIX</div>
+  <div class="card-inst">
+    <div class="grid2">
+      <div class="campo">
+        <label>Banco</label>
+        <input type="text" id="banco-nome" placeholder="Ex: Banco do Brasil">
+      </div>
+      <div class="campo">
+        <label>Agência</label>
+        <input type="text" id="banco-agencia" placeholder="Ex: 1234-5">
+      </div>
+      <div class="campo">
+        <label>Conta Corrente</label>
+        <input type="text" id="banco-conta" placeholder="Ex: 12345-6">
+      </div>
+      <div class="campo">
+        <label>Chave PIX (CNPJ)</label>
+        <input type="text" id="banco-pix" placeholder="Ex: 00.000.000/0001-00">
+      </div>
+    </div>
+  </div>
+
+  <div class="secao-titulo">Aviso de Uso de Imagem</div>
+  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1rem;">
+    Este aviso aparece fixo no final da seção de Avisos toda semana. Troque o tipo se quiser usar uma imagem ou imagem com legenda.
+  </p>
+  <div class="card-inst">
+    <div class="campo">
+      <label>Tipo</label>
+      <select id="uso-imagem-tipo" onchange="toggleUsoImagemCampos()">
+        <option value="texto">📝 Só texto (padrão atual)</option>
+        <option value="imagem">🖼️ Só imagem</option>
+        <option value="misto">📋 Imagem + Texto</option>
+      </select>
+    </div>
+    <div id="uso-imagem-upload" style="display:none;" class="campo">
+      <label>Nome da imagem (pasta imagens/ do repositório)</label>
+      <input type="text" id="uso-imagem-nome" placeholder="Ex: uso-imagem.png">
+      <div class="dica">Digite apenas o nome do arquivo que está na pasta <code>imagens/</code> do repositório.</div>
+    </div>
+    <div id="uso-imagem-texto-wrap" class="campo">
+      <label>Texto</label>
+      <textarea id="uso-imagem-texto" class="grande" placeholder="Comunicamos que, durante nossos cultos e eventos, realizamos filmagens e fotografias...">Comunicamos que, durante nossos cultos e eventos, realizamos filmagens e fotografias com o objetivo de promover institucionalmente as atividades da nossa Igreja. A captura de imagens individuais poderá ocorrer eventualmente.
+
+Caso tenha alguma restrição em relação ao uso de sua imagem, solicitamos que entre em contato com um dos membros do Departamento de Mídia, que estará pronto para lhe auxiliar.
+
+Ao ingressar em nosso templo, você reconhece e concorda com a utilização de sua imagem para tais finalidades. Ressaltamos que a gravação ou transmissão de qualquer conteúdo somente é permitida pelos canais oficiais da Igreja ou mediante consentimento formal do Conselho da Igreja.</textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════════════
+     ABA PLANEJAMENTO
+════════════════════════════════════════════ -->
+<div class="aba-conteudo" id="aba-planejamento">
+  <div class="aba-intro">
+    <strong>Planejamento Anual</strong>
+    <p>O planejamento é menos frequente, mas precisa permanecer coerente com a timeline do boletim. Este bloco serve para revisões anuais ou ajustes pontuais de agenda.</p>
+  </div>
+  <label class="secao-marcador">
+    <input type="checkbox" id="toggle-planejamento" checked>
+    <span>
+      <strong>Atualizar planejamento ao publicar</strong>
+      Quando desmarcado, o planejamento anual permanece intacto no boletim, mesmo que os campos desta aba tenham sido alterados no painel.
+    </span>
+  </label>
+
+  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1.5rem; padding: 0.8rem 1rem; background:#fff3cd; border-radius:8px; border:1px solid #ffc107;">
+    ⚠️ Atualizar anualmente. Cole o texto dos eventos de cada mês — um evento por linha, com o dia na frente. O sistema formata a timeline automaticamente.
+  </p>
+
+  <div class="liturgia-dica">
+    <strong>Formato de cada linha:</strong>
+    Dia · Descrição do evento. Exemplos:<br>
+    <code>04 · Iº Capacitação de Oficiais</code><br>
+    <code>05 · Ceia do Senhor (Sede e Congregações - Noite)</code><br>
+    <code>EBD · Pausa no currículo para material alusivo à Reforma</code>
+  </div>
+
+  <div id="meses-plan"></div>
+
+</div>
+</div>
+
+<div class="modal-confirmacao" id="modal-confirmacao-publicacao" aria-hidden="true">
+  <div class="modal-confirmacao-card" role="dialog" aria-modal="true" aria-labelledby="modal-confirmacao-titulo">
+    <div class="modal-confirmacao-topo">
+      <div>
+        <h3 id="modal-confirmacao-titulo">Confirmar Atualização</h3>
+        <p>Revise abaixo o que será alterado no boletim e o que continuará preservado antes de publicar.</p>
+      </div>
+      <button type="button" class="modal-confirmacao-fechar" id="modal-confirmacao-fechar" aria-label="Fechar confirmação">✕</button>
+    </div>
+    <div class="modal-confirmacao-corpo">
+      <div class="modal-confirmacao-bloco">
+        <strong>Será atualizado</strong>
+        <ul id="modal-resumo-atualiza"></ul>
+      </div>
+      <div class="modal-confirmacao-bloco mantido">
+        <strong>Será mantido como está</strong>
+        <ul id="modal-resumo-mantem"></ul>
+      </div>
+    </div>
+    <div class="modal-confirmacao-rodape" id="modal-confirmacao-rodape"></div>
+    <div class="modal-confirmacao-acoes">
+      <button type="button" class="btn-modal-secundario" id="modal-confirmacao-cancelar">Cancelar</button>
+      <button type="button" class="btn-modal-principal" id="modal-confirmacao-confirmar">Continuar publicação</button>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div id="status-bar"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  CONFIGURAÇÃO
+// ══════════════════════════════════════════════════════════════
+const REPO = 'helder-ssouza/ipsaloa_automacao';
+const ARQUIVO = 'index.html';
+
+// ══════════════════════════════════════════════════════════════
+//  LIMPAR CACHE
+// ══════════════════════════════════════════════════════════════
+function limparCache() {
+  if (!confirm('Limpar todos os dados em cache?\n\nOs campos preenchidos serão perdidos, mas o token GitHub será mantido.')) return;
+  const token = getToken();
+  localStorage.clear();
+  if (token) localStorage.setItem('ipsaloa_token', token);
+  mostrarStatus('✅ Cache limpo! Recarregue a página.');
+  setTimeout(() => location.reload(), 1500);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  TOKEN — salvo em localStorage, nunca sai deste computador
+// ══════════════════════════════════════════════════════════════
+function salvarToken(v) {
+  localStorage.setItem('ipsaloa_token', v.trim());
+  atualizarStatusToken();
+}
+function getToken() {
+  return localStorage.getItem('ipsaloa_token') || '';
+}
+function atualizarStatusToken() {
+  const t = getToken();
+  const bar = document.getElementById('config-bar');
+  const st = document.getElementById('token-status');
+  const inp = document.getElementById('github-token');
+  if (t) {
+    inp.value = t;
+    bar.className = 'config-bar ok';
+    st.textContent = '✅ Token salvo neste navegador';
+  } else {
+    bar.className = 'config-bar';
+    st.textContent = '— cole o token para ativar a publicação';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  NAVEGAÇÃO ENTRE ABAS
+// ══════════════════════════════════════════════════════════════
+function mudarAba(id, btn) {
+  document.querySelectorAll('.aba-conteudo').forEach(a => a.classList.remove('ativa'));
+  document.querySelectorAll('.aba-nav-btn').forEach(b => b.classList.remove('ativa'));
+  document.getElementById('aba-' + id).classList.add('ativa');
+  btn.classList.add('ativa');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  AVISOS — gerenciador dinâmico
+// ══════════════════════════════════════════════════════════════
+let avisos = [];
+
+function addAviso(dados) {
+  const id = Date.now();
+  const aviso = dados || { id, tipo: 'texto', titulo: '', corpo: '', imagemNome: '', manter: false };
+  if (!dados) { aviso.id = id; avisos.push(aviso); }
+  renderAvisos();
+}
+
+function removerAviso(id) {
+  avisos = avisos.filter(a => a.id !== id);
+  renderAvisos();
+}
+
+function renderAvisos() {
+  const lista = document.getElementById('lista-avisos');
+  lista.innerHTML = '';
+  avisos.forEach((av, idx) => {
+    const div = document.createElement('div');
+    div.className = 'aviso-card' + (av.manter ? ' aviso-fixo' : '');
+    div.innerHTML = `
+      <div class="aviso-card-header">
+        <strong style="font-size:0.8rem;color:var(--verde2);">Aviso ${idx + 1}</strong>
+        <select onchange="atualizarTipoAviso(${av.id}, this.value)">
+          <option value="texto" ${av.tipo==='texto'?'selected':''}>📝 Só texto</option>
+          <option value="imagem" ${av.tipo==='imagem'?'selected':''}>🖼️ Só imagem</option>
+          <option value="misto" ${av.tipo==='misto'?'selected':''}>📋 Imagem + Texto</option>
+        </select>
+        <button class="btn-remover-aviso" onclick="removerAviso(${av.id})">✕ Remover</button>
+      </div>
+
+      <div class="campo">
+        <label>Título do Aviso</label>
+        <input type="text" value="${escHtml(av.titulo)}" placeholder="Ex: 🎉 128 Anos"
+          oninput="atualizarAviso(${av.id}, 'titulo', this.value)">
+        <div class="dica">O título aparece no card publicado e ajuda a formar o link de compartilhamento desse aviso.</div>
+      </div>
+
+      ${av.tipo !== 'texto' ? `
+      <div class="campo">
+        <label>Nome da imagem (pasta imagens/ do repositório)</label>
+        <input type="text" value="${escHtml(av.imagemNome)}" placeholder="Ex: Oficiais.jpeg"
+          oninput="atualizarAviso(${av.id}, 'imagemNome', this.value)">
+        <div class="dica">Digite apenas o nome do arquivo. A imagem deve estar na pasta <code>imagens/</code> do repositório GitHub.</div>
+      </div>` : ''}
+
+      ${av.tipo !== 'imagem' ? `
+      <div class="campo">
+        <label>${av.tipo === 'misto' ? 'Texto abaixo da imagem' : 'Texto do Aviso'}</label>
+        <textarea class="grande" oninput="atualizarAviso(${av.id}, 'corpo', this.value)"
+          placeholder="Cole o texto aqui. Separe parágrafos com linha em branco. Use **texto** para negrito.">${escHtml(av.corpo)}</textarea>
+        <div class="dica">Esse conteúdo também será usado como base da legenda curta no compartilhamento do aviso.</div>
+      </div>` : ''}
+
+      <label class="manter-label">
+        <input type="checkbox" ${av.manter?'checked':''} onchange="atualizarAviso(${av.id}, 'manter', this.checked); renderAvisos();">
+        <span>📌 Manter semana que vem</span>
+      </label>
+
+      <div class="dica-compartilhar">Fluxo no boletim final: botão Compartilhar automático, link próprio do aviso e modo de leitura focado nesse card quando o link for aberto.</div>
+    `;
+    lista.appendChild(div);
+  });
+}
+
+function atualizarAviso(id, campo, valor) {
+  const av = avisos.find(a => a.id === id);
+  if (av) av[campo] = valor;
+}
+
+function atualizarTipoAviso(id, tipo) {
+  const av = avisos.find(a => a.id === id);
+  if (av) { av.tipo = tipo; renderAvisos(); }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  USO DE IMAGEM — aviso institucional fixo
+// ══════════════════════════════════════════════════════════════
+function toggleUsoImagemCampos() {
+  const tipo = document.getElementById('uso-imagem-tipo').value;
+  document.getElementById('uso-imagem-upload').style.display = tipo !== 'texto' ? 'block' : 'none';
+  document.getElementById('uso-imagem-texto-wrap').style.display = tipo !== 'imagem' ? 'block' : 'none';
+}
+
+function usoImagemParaHtml() {
+  const tipo = document.getElementById('uso-imagem-tipo').value;
+  const texto = document.getElementById('uso-imagem-texto').value.trim();
+  const nomeArq = (document.getElementById('uso-imagem-nome')?.value || '').trim();
+  const imgSrc = nomeArq ? `imagens/${nomeArq}` : '';
+  const cor = 'var(--cor-texto-suave)';
+
+  let conteudo = '';
+  if (tipo === 'imagem' && imgSrc) {
+    conteudo = `\n        <img src="${imgSrc}" alt="Uso de Imagem" class="aviso-imagem">`;
+  } else if (tipo === 'misto' && imgSrc) {
+    const paras = textoAvisoParaHtml(texto);
+    conteudo = `\n        <img src="${imgSrc}" alt="Uso de Imagem" class="aviso-imagem">\n        ${paras}`;
+  } else {
+    const paras = texto ? texto.split(/\n\s*\n/).map(p =>
+      `        <p style="font-size:0.88rem; margin-bottom:0.7rem;">${escHtml(p.trim()).replace(/\n/g,'<br>')}</p>`
+    ).join('\n') : '';
+    conteudo = '\n' + paras;
+  }
+
+  return `\n      <div class="card" id="uso-imagem" style="border-left-color: ${cor};">
+        <div class="card-titulo" style="color: ${cor};">Uso de Imagem</div>${conteudo}
+      </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  AVISOS — manter semana que vem
+// ══════════════════════════════════════════════════════════════
+let aniversariantes = [
+  { dia: '06', nome: 'Edina Pereira dos Santos Barbosa' },
+  { dia: '15', nome: 'Geovana Areias de Almeida' },
+  { dia: '18', nome: 'Evalda Silva de Melo' },
+  { dia: '28', nome: 'Gledson Luiz Areias Alves' },
+  { dia: '28', nome: 'José Ailton Carlos' }
+];
+
+function renderAniversariantes() {
+  const lista = document.getElementById('lista-aniversariantes');
+  lista.innerHTML = '';
+  aniversariantes.forEach((a, i) => {
+    const div = document.createElement('div');
+    div.className = 'aniv-linha';
+    div.innerHTML = `
+      <input type="text" class="dia" value="${escHtml(a.dia)}" placeholder="Dia"
+        oninput="aniversariantes[${i}].dia = this.value">
+      <input type="text" class="nome" value="${escHtml(a.nome)}" placeholder="Nome completo"
+        oninput="aniversariantes[${i}].nome = this.value">
+      <button class="btn-remover-aniv" onclick="removerAniv(${i})">✕</button>
+    `;
+    lista.appendChild(div);
+  });
+}
+
+function addAniversariante() {
+  aniversariantes.push({ dia: '', nome: '' });
+  renderAniversariantes();
+}
+
+function removerAniv(i) {
+  aniversariantes.splice(i, 1);
+  renderAniversariantes();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PLANEJAMENTO — meses dinâmicos
+// ══════════════════════════════════════════════════════════════
+const MESES = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO',
+               'JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
+
+const DADOS_PLANEJAMENTO_ATUAL = {
+  'JANEIRO': `04 à 10 · Semana Mundial de Oração
+04 · Ceia do Senhor (Sede e Congregações - Noite)
+22 · Reunião do Conselho (Pastoral e Administrativa)
+25 · Assembleia Geral Ordinária (Almoço Comunitário)
+31 · Iº Encontro da Liderança IP Saloá/2026`,
+  'FEVEREIRO': `01 · Ceia do Senhor (Sede e Congregações - Noite)
+01 · 1º Domingo – Dia do Homem Presbiteriano
+06 e 07 · 65ª RO do Presbitério de Garanhuns – PGAR
+08 · 2º Domingo – Dia da Mulher Presbiteriana
+17 · Dia de Convivência IP Saloá (Retiro Espiritual)
+24 · Reunião do Conselho (Pastoral e Administrativa)`,
+  'MARÇO': `01 · Ceia do Senhor (Sede e Congregações - Noite)
+07 · Chá das Mulheres (Dia Internacional da Mulher - Programação Evangelística)
+10 · Primeiro Culto Protestante no Brasil
+28 · Encontro de Casais
+31 · Reunião do Conselho (Pastoral e Administrativa)`,
+  'ABRIL': `04 · Iº Capacitação de Oficiais da IP Saloá/2026
+05 · Ceia do Senhor (Sede e Congregações - Noite)
+05 · Páscoa: Culto e Café da Ressurreição
+15 · Visita da Federação de UPHs do PGAR
+25 · Encontro de Casais
+28 · Reunião do Conselho (Pastoral e Administrativa)`,
+  'MAIO': `02 · Vigília de Oração – Família e Igreja que busca ao Senhor
+03 · Ceia do Senhor (Sede e Congregações - Noite)
+09 · 32º Aniversário da SAF Georgia Areias
+10 · 2º Domingo – Dia das Mães
+17 · 3º Domingo – Dia do Jovem Presbiteriano
+26 · Reunião do Conselho (Pastoral e Administrativa)`,
+  'JUNHO': `07 · Ceia do Senhor (Sede e Congregações - Noite)
+13 · Encontro de Casais – Alusivo ao Dia dos Namorados
+21 · Vigília de Oração – Encerramento da Campanha
+30 · Encontro de Casais
+30 · Reunião do Conselho (Pastoral e Administrativa)`,
+  'JULHO': `05 · Ceia do Senhor (Sede - Noite)
+05 · Dia do Diácono Presbiteriano
+26 · 4º Domingo – Dia do Adolescente Presbiteriano
+28 · Reunião do Conselho (Pastoral e Administrativa)`,
+  'AGOSTO': `EBD · Pausa no currículo – material alusivo à Implantação da IPB
+01 · IIª Capacitação de Oficiais da IP Saloá/2026
+02 · Ceia do Senhor (Sede e Congregações - Noite)
+09 · 2º Domingo – Dia dos Pais – Café da Manhã – SAF
+12 · Dia do Presbiterianismo Nacional e Dia das Missões
+15 · Pijamola – Departamento Infantil e UMP
+25 · Reunião do Conselho (Pastoral e Administrativa)
+29 · Encontro de Casais`,
+  'SETEMBRO': `06 · Ceia do Senhor (Sede e Congregações - Noite)
+08 · Dia dos Seminários e Seminaristas
+20 · 3º Domingo – Dia da Escola Dominical (Almoço Comunitário)
+26 · Encontro de Casais
+XX · 65º Aniversário do Presbitério de Garanhuns – PGAR
+29 · Reunião do Conselho (Pastoral e Administrativa)`,
+  'OUTUBRO': `EBD · Pausa no currículo – material alusivo à Reforma Protestante
+03 · Aniversário Congregação Pedra do Mocó (Almoço Comunitário)
+04 · Ceia do Senhor (Sede e Congregações - Noite)
+10 · Programação Evangelística – Dia das Crianças – IP Saloá
+12 · Dia das Crianças / Dia Nacional das Crianças Presbiterianas
+17 · Programação Evangelística – Dia das Crianças – Cong. Alto da Serra
+24 · Encontro de Casais
+27 · Reunião do Conselho (Pastoral e Administrativa)
+31 · Dia da Reforma Protestante`,
+  'NOVEMBRO': `XX · 63ª RE do Presbitério de Garanhuns – PGAR
+08 · Ceia do Senhor (Sede e Congregações - Noite)
+08 · 4º Aniversário de Organização Eclesiástica da IP Saloá
+11 · Dia Nacional das SAFs
+24 · Reunião do Conselho (Pastoral e Administrativa)
+26 · DIA NACIONAL DE AÇÃO DE GRAÇAS – Celebração da Família IP Saloá`,
+  'DEZEMBRO': `01 · Reunião do Conselho (Pastoral e Administrativa)
+05 · IIIº Encontro da Liderança IP Saloá/2026
+06 · Ceia do Senhor (Sede e Congregações - Noite)
+08 · Dia Nacional da Família
+14 · 2º Domingo – Dia da Bíblia e Dia da Esposa do Pastor Presbiteriano
+17 · Dia do Pastor Presbiteriano
+24 · Celebração de Natal
+31 · Celebração da Família - Ano Novo`
+};
+
+function renderPlanejamento() {
+  const cont = document.getElementById('meses-plan');
+  cont.innerHTML = '';
+  MESES.forEach(mes => {
+    const div = document.createElement('div');
+    div.style.marginBottom = '1.2rem';
+    div.innerHTML = `
+      <div class="secao-titulo">${mes}</div>
+      <div class="campo">
+        <textarea class="grande" id="plan-${mes}" placeholder="04 · Evento aqui\n05 · Outro evento">${escHtml(DADOS_PLANEJAMENTO_ATUAL[mes] || '')}</textarea>
+        <div class="dica">Formato: Dia · Descrição. Uma linha por evento.</div>
+      </div>
+    `;
+    cont.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  GERAÇÃO DO HTML DO BOLETIM
+// ══════════════════════════════════════════════════════════════
+
+function escHtml(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function textoParaParas(texto) {
+  // Preserva parágrafos separados por linha em branco
+  // NÃO aplica escHtml aqui — o texto do devocional vai direto no HTML
+  if (!texto.trim()) return '';
+  return texto.trim().split(/\n\s*\n/).map(p =>
+    `<p>${p.trim().replace(/\n/g,'<br>')}</p>`
+  ).join('\n        ');
+}
+
+function textoParaBold(texto) {
+  return texto.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+function superscritosParaHtml(texto) {
+  if (!texto) return texto;
+  // Converte notas de rodapé do Símbolo de Fé para sobrescrito
+  // sem tocar em versículos ou em números já sobrescritos.
+  return texto
+    // Referências: "1 Mt 3.16", "2 1Co 10.31", "; 3 Sl 19.1"
+    .replace(/(^|[;]\s*)(\d+)(?=\s+[1-3]?[A-Za-zÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç])/gm,
+      (_, sep, num) => `${sep}<sup>${num}</sup>`)
+    // Resposta: "Deus,1 e", "sempre.2", "homem)3 "
+    .replace(/([A-Za-zÁÉÍÓÚÂÊÔÃÕÇáéíóúâêôãõç\)\];,\.!?:"'»”’])(\d+)(?=\s|$)/g,
+      (_, antes, num) => `${antes}<sup>${num}</sup>`);
+}
+
+function liturgiaParaHtml(texto, dataStr) {
+  if (!texto.trim()) return '';
+  const linhas = texto.trim().split('\n');
+  let html = '';
+  let dentroLinha = false;
+
+  linhas.forEach(linha => {
+    linha = linha.trim();
+    if (!linha) return;
+    if (/^(ESCOLA DOMINICAL|CULTO DE CELEBRAÇÃO|LITURGIA)$/i.test(linha)) return;
+
+    // Linha toda em maiúsculas = título de seção
+    if (linha === linha.toUpperCase() && linha.length > 3 && !/^\d/.test(linha) && !linha.includes(':')) {
+      if (dentroLinha) { html += `</div>\n`; dentroLinha = false; }
+      html += `<div class="lit-secao-verde">${escHtml(linha)}</div>\n`;
+      html += `<div class="lit-linha">\n`;
+      dentroLinha = true;
+    } else {
+      if (!dentroLinha) { html += `<div class="lit-linha">\n`; dentroLinha = true; }
+      // Hino NC = evento com bold no número e nome
+      if (/hino nc:/i.test(linha)) {
+        const partes = linha.replace(/hino nc:\s*/i, '');
+        html += `  <div class="lit-evento">Hino NC: <strong>${escHtml(partes)}</strong></div>\n`;
+      } else if (/leitura bíblica:|leitura:/i.test(linha)) {
+        const ref = linha.replace(/leitura bíblica:\s*|leitura:\s*/i, '');
+        html += `  <div class="lit-evento">Leitura Bíblica: <strong>${escHtml(ref)}</strong></div>\n`;
+      } else if (/mensagem:/i.test(linha)) {
+        html += `  <div class="lit-evento">${escHtml(linha)}</div>\n`;
+      } else if (/^(prelúdio|cântico congregacional|todos de pé|todos sentados|leitura alternada)/i.test(linha)) {
+        html += `  <div class="lit-micro">${escHtml(linha)}</div>\n`;
+      } else {
+        html += `  <div class="lit-evento">${escHtml(linha)}</div>\n`;
+      }
+    }
+  });
+  if (dentroLinha) html += `</div>\n`;
+  return html;
+}
+
+function liturgiaTituloParaHtml(texto) {
+  // Detecta título do sermão na seção EDIFICAÇÃO: linha após "Mensagem:"
+  const linhas = texto.trim().split('\n');
+  let tituloIdx = -1;
+  linhas.forEach((l, i) => { if (/mensagem:/i.test(l)) tituloIdx = i + 1; });
+  if (tituloIdx >= 0 && linhas[tituloIdx]) {
+    const titulo = linhas[tituloIdx].trim();
+    const refIdx = tituloIdx + 1;
+    return { titulo, ref: linhas[refIdx] ? linhas[refIdx].trim() : '' };
+  }
+  return { titulo: '', ref: '' };
+}
+
+function planMesParaHtml(textoMes, nomeMes) {
+  if (!textoMes.trim()) return '';
+  const linhas = textoMes.trim().split('\n').filter(l => l.trim());
+  let items = '';
+  linhas.forEach(linha => {
+    const partes = linha.split(/\s*·\s*/, 2);
+    const dia = partes[0] ? partes[0].trim() : '';
+    const desc = partes[1] ? partes[1].trim() : linha.trim();
+    items += `<li class="timeline-item"><div class="timeline-ano">${escHtml(dia)}</div><div class="timeline-texto">${escHtml(desc)}</div></li>`;
+  });
+  return `<div class="card"><div class="card-titulo">${escHtml(nomeMes)}</div><ul class="timeline">${items}</ul></div>`;
+}
+
+function textoAvisoParaHtml(texto) {
+  // Converte texto corrido em parágrafos formatados igual ao boletim original
+  // Linhas em branco = novo parágrafo
+  // **texto** = negrito
+  // Linhas começando com emoji seguido de MAIÚSCULAS = destaque em cor verde
+  if (!texto.trim()) return '';
+  const paras = texto.trim().split(/\n\s*\n/);
+  return paras.map(bloco => {
+    const linhas = bloco.trim().split('\n');
+    if (linhas.length === 1) {
+      const linha = linhas[0];
+      // Linha de destaque (emoji + texto maiúsculo)
+      if (/^[\p{Emoji}].*[A-ZÁÉÍÓÚÂÊÔÃÕÇ]{3}/u.test(linha) && linha === linha.toUpperCase().replace(/[^A-Za-zÀ-ÿ\s\p{Emoji}:,.!?]/u,'')) {
+        const bold = linha.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+        return `<p style="font-size:0.88rem; font-weight:700; color:var(--verde-escuro); margin-bottom:0.4rem;">${bold}</p>`;
+      }
+      const bold = linha.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      return `<p style="font-size:0.88rem; margin-bottom:0.7rem;">${bold}</p>`;
+    }
+    // Múltiplas linhas no mesmo bloco → usar <br>
+    const conteudo = linhas.map(l => l.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')).join('<br>');
+    return `<p style="font-size:0.88rem; margin-bottom:0.7rem;">${conteudo}</p>`;
+  }).join('\n      ');
+}
+
+function avisosParaHtml(opcoes = {}) {
+  const { incluirUsoImagem = true } = opcoes;
+  let html = '';
+  const cores = ['var(--cor-destaque)', 'var(--cor-primaria)', 'var(--cor-primaria-2)', 'var(--cor-secundaria)'];
+  avisos.forEach((av, i) => {
+    const cor = cores[i % cores.length];
+    const titulo = escHtml(av.titulo || 'Aviso');
+    const imgNome = (av.imagemNome || '').trim();
+    const imgSrc = imgNome ? `imagens/${imgNome}` : '';
+
+    let conteudo = '';
+    if (av.tipo === 'imagem' && imgSrc) {
+      conteudo = `\n        <img src="${imgSrc}" alt="${titulo}" class="aviso-imagem">`;
+    } else if (av.tipo === 'misto') {
+      const corpo = textoAvisoParaHtml(av.corpo || '');
+      conteudo = (imgSrc ? `\n        <img src="${imgSrc}" alt="${titulo}" class="aviso-imagem">` : '')
+               + (corpo ? '\n        ' + corpo : '');
+    } else {
+      conteudo = '\n        ' + textoAvisoParaHtml(av.corpo || '');
+    }
+
+    html += `
+      <div class="card" style="border-left-color: ${cor};">
+        <div class="card-titulo" style="color: ${cor};">${titulo}</div>${conteudo}
+      </div>`;
+  });
+  if (incluirUsoImagem) {
+    html += usoImagemParaHtml();
+  }
+  return html;
+}
+
+function obterSecoesParaAtualizar() {
+  return {
+    aniversariantes: !!document.getElementById('toggle-aniversariantes')?.checked,
+    institucional: !!document.getElementById('toggle-institucional')?.checked,
+    planejamento: !!document.getElementById('toggle-planejamento')?.checked
+  };
+}
+
+function montarResumoAtualizacao() {
+  const secoes = obterSecoesParaAtualizar();
+  const atualizar = [
+    'Data da capa e título da página',
+    'Devocional da semana',
+    'Liturgia da Escola Dominical e do Culto de Celebração',
+    'Símbolo de fé da edição',
+    'Avisos cadastrados na aba Avisos'
+  ];
+  const manter = [];
+
+  if (secoes.aniversariantes) atualizar.push('Arte de aniversariantes');
+  else manter.push('Arte de aniversariantes');
+
+  if (secoes.institucional) {
+    atualizar.push('Base institucional, dados bancários e aviso fixo de uso de imagem');
+  } else {
+    manter.push('Base institucional, dados bancários e aviso fixo de uso de imagem');
+  }
+
+  if (secoes.planejamento) atualizar.push('Arte de planejamento');
+  else manter.push('Arte de planejamento');
+
+  return { atualizar, manter, secoes };
+}
+
+function preencherListaResumo(id, itens) {
+  const lista = document.getElementById(id);
+  if (!lista) return;
+  lista.innerHTML = itens.map(item => `<li>${escHtml(item)}</li>`).join('');
+}
+
+function atualizarResumoPublicacao() {
+  const { atualizar, manter } = montarResumoAtualizacao();
+  preencherListaResumo('resumo-atualiza', atualizar);
+  preencherListaResumo('resumo-mantem', manter.length ? manter : ['Nenhuma seção extra será preservada além do fluxo semanal.']);
+  const rodape = document.getElementById('resumo-publicacao-rodape');
+  if (rodape) {
+    rodape.textContent = manter.length
+      ? 'Os itens marcados como mantidos continuam exatamente como estão no index.html publicado hoje.'
+      : 'Nesta configuração, além do fluxo semanal, todas as seções opcionais marcadas também serão atualizadas.';
+  }
+}
+
+function preencherResumoModalConfirmacao() {
+  const { atualizar, manter } = montarResumoAtualizacao();
+  preencherListaResumo('modal-resumo-atualiza', atualizar);
+  preencherListaResumo('modal-resumo-mantem', manter.length ? manter : ['Nenhuma seção extra será preservada além do fluxo semanal.']);
+  const rodape = document.getElementById('modal-confirmacao-rodape');
+  if (rodape) {
+    rodape.textContent = manter.length
+      ? 'Os itens mantidos continuarão exatamente como estão na versão já publicada do boletim.'
+      : 'Nesta publicação, além do fluxo semanal, todas as seções opcionais marcadas também serão atualizadas.';
+  }
+}
+
+let resolverModalPublicacao = null;
+
+function fecharModalConfirmacaoPublicacao(confirmado) {
+  const modal = document.getElementById('modal-confirmacao-publicacao');
+  if (modal) {
+    modal.classList.remove('aberto');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+  document.body.style.overflow = '';
+  const resolver = resolverModalPublicacao;
+  resolverModalPublicacao = null;
+  if (resolver) resolver(confirmado);
+}
+
+function abrirModalConfirmacaoPublicacao() {
+  preencherResumoModalConfirmacao();
+  const modal = document.getElementById('modal-confirmacao-publicacao');
+  if (!modal) return Promise.resolve(true);
+  modal.classList.add('aberto');
+  modal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modal-confirmacao-confirmar')?.focus();
+  return new Promise(resolve => {
+    resolverModalPublicacao = resolve;
+  });
+}
+
+function tocarAlertaConclusao() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const notas = [880, 1174.66];
+    let inicio = ctx.currentTime;
+    notas.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.0001, inicio);
+      gain.gain.exponentialRampToValueAtTime(0.12, inicio + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, inicio + 0.28);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(inicio);
+      osc.stop(inicio + 0.3);
+      inicio += i === 0 ? 0.18 : 0;
+    });
+    window.setTimeout(() => ctx.close().catch(() => {}), 700);
+  } catch (e) {
+    console.warn('Nao foi possivel tocar o alerta sonoro.', e);
+  }
+}
+
+async function notificarConclusaoPublicacao(data) {
+  if (!('Notification' in window)) return;
+  try {
+    if (Notification.permission === 'default') {
+      await Notification.requestPermission();
+    }
+    if (Notification.permission === 'granted') {
+      new Notification('Painel IP Saloá', {
+        body: `Atualização concluída com sucesso para ${data}.`,
+        silent: true
+      });
+    }
+  } catch (e) {
+    console.warn('Nao foi possivel exibir a notificacao do sistema.', e);
+  }
+}
+
+function extrairAvisoUsoImagem(htmlOriginal) {
+  const bloco = htmlOriginal.match(/<div class="card" id="uso-imagem"[\s\S]*?<\/div>\s*(?=<!--\/PAINEL:AVISOS-->|\n\s*<div class="card")/);
+  return bloco ? bloco[0].trim() : '';
+}
+
+function aniversariantesParaHtml() {
+  return aniversariantes.map(a =>
+    `\n        <div class="aniv-item">
+          <div class="aniv-dia">${escHtml(a.dia)}</div><span class="aniv-nome">${escHtml(a.nome)}</span>
+        </div>`
+  ).join('');
+}
+
+function conselhoParagrafo() {
+  return (document.getElementById('conselho-membros').value || '')
+    .trim().split('\n').filter(l => l.trim())
+    .map(l => escHtml(l.trim())).join('<br>');
+}
+
+function gerarIndexHtml() {
+  const data = document.getElementById('data-boletim').value.trim() || 'DATA A DEFINIR';
+  const dataNum = data.match(/(\d+)\s+de\s+(\w+)\s+de\s+(\d+)/i);
+  let dataFmt = data;
+  if (dataNum) {
+    const mapa = {janeiro:'01',fevereiro:'02',março:'03',abril:'04',maio:'05',junho:'06',
+                  julho:'07',agosto:'08',setembro:'09',outubro:'10',novembro:'11',dezembro:'12'};
+    const d = dataNum[1].padStart(2,'0'), m = mapa[dataNum[2].toLowerCase()]||'00', a = dataNum[3];
+    dataFmt = `${d}/${m}/${a}`;
+  }
+
+  const devocTitulo = document.getElementById('devoc-titulo').value.trim();
+  const devocRef = document.getElementById('devoc-ref').value.trim();
+  const devocTexto = textoParaParas(document.getElementById('devoc-texto').value);
+  const devocAutor = document.getElementById('devoc-autor').value.trim();
+
+  const litEdTexto = document.getElementById('lit-ed').value;
+  const litCelTexto = document.getElementById('lit-cel').value;
+  const litEdHtml = liturgiaParaHtml(litEdTexto, data);
+  const litCelHtml = liturgiaParaHtml(litCelTexto, data);
+  const { titulo: serTitulo, ref: serRef } = liturgiaTituloParaHtml(litCelTexto);
+
+  const catecPerg = document.getElementById('catec-pergunta').value.trim();
+  const catecResp = document.getElementById('catec-resposta').value.trim();
+  const catecRefs = document.getElementById('catec-refs').value.trim();
+  const catecNome = document.getElementById('catec-nome').value.trim();
+
+  const pastor = escHtml(document.getElementById('pastor-nome').value.trim() || 'Rev. José Aragão Neto - (87) 9 8174-0995');
+  const consPresidente = escHtml(document.getElementById('conselho-presidente').value.trim());
+  const consVice = escHtml(document.getElementById('conselho-vice').value.trim());
+  const consSecretario = escHtml(document.getElementById('conselho-secretario').value.trim());
+  const consRepresentante = escHtml(document.getElementById('conselho-representante').value.trim());
+  const consMembros = conselhoParagrafo();
+  const diaconos = (document.getElementById('diaconos-lista').value||'').trim().split('\n').filter(l=>l.trim()).map(l=>escHtml(l.trim())).join('<br>');
+  const ebdLider = escHtml(document.getElementById('ebd-lideranca').value.trim()).replace(/\n/g,'<br>');
+
+  const banco = escHtml(document.getElementById('banco-nome').value.trim() || '&nbsp;');
+  const agencia = escHtml(document.getElementById('banco-agencia').value.trim() || '&nbsp;');
+  const conta = escHtml(document.getElementById('banco-conta').value.trim() || '&nbsp;');
+  const pix = escHtml(document.getElementById('banco-pix').value.trim() || '&nbsp;');
+
+  const avisosHtml = avisosParaHtml();
+  const anivHtml = aniversariantesParaHtml();
+
+  // Planejamento
+  let planSem1 = `<div class="card"><div class="card-titulo">PLANEJAMENTO ${new Date().getFullYear()}<br>1º SEMESTRE</div></div>`;
+  let planSem2 = `<div class="card"><div class="card-titulo">PLANEJAMENTO ${new Date().getFullYear()}<br>2º SEMESTRE</div></div>`;
+  MESES.forEach((mes, i) => {
+    const texto = document.getElementById('plan-' + mes)?.value || '';
+    const bloco = planMesParaHtml(texto, mes);
+    if (i < 6) planSem1 += '\n        ' + bloco;
+    else planSem2 += '\n        ' + bloco;
+  });
+
+  // Catecismo refs HTML
+  let catecRefsHtml = '';
+  if (catecRefs) {
+    catecRefsHtml = `\n        <div class="catec-referencias">\n`;
+    catecRefs.split('\n').forEach(l => {
+      if (l.trim()) catecRefsHtml += `          <p>${escHtml(l.trim())}</p>\n`;
+    });
+    catecRefsHtml += `        </div>`;
+  }
+
+  // Monta o HTML final — preserva TODA a estrutura, CSS e JS originais
+  // e substitui apenas os blocos de conteúdo editável
+  return gerarHtmlCompleto({
+    data, dataFmt,
+    devocTitulo, devocRef, devocTexto, devocAutor,
+    litEdHtml, litCelHtml, dataFmt,
+    serTitulo, serRef,
+    catecNome, catecPerg, catecResp, catecRefsHtml,
+    avisosHtml, anivHtml,
+    pastor, consMembros, consPresidente, consVice, consSecretario, consRepresentante,
+    diaconos, ebdLider,
+    banco, agencia, conta, pix,
+    planSem1, planSem2
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  TEMPLATE HTML COMPLETO DO BOLETIM
+//  (estrutura preservada, apenas conteúdo parametrizado)
+// ══════════════════════════════════════════════════════════════
+function gerarHtmlCompleto(d) {
+  // Lê o template base do localStorage (gravado na primeira vez)
+  // ou usa o template hardcoded aqui.
+  // A lógica: ao publicar, buscamos o index.html atual do GitHub,
+  // aplicamos as substituições e enviamos de volta.
+  // Portanto esta função retorna null e a publicação usa patchHtml().
+  return null; // ver publicar()
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PATCH — aplica as mudanças usando marcadores <!--PAINEL:X-->
+// ══════════════════════════════════════════════════════════════
+function substituirMarcador(h, chave, novoConteudo) {
+  const re = new RegExp(`<!--PAINEL:${chave}-->[\\s\\S]*?<!--\\/PAINEL:${chave}-->`);
+  if (!re.test(h)) return h; // marcador não encontrado — não toca em nada
+  return h.replace(re, `<!--PAINEL:${chave}-->${novoConteudo}<!--/PAINEL:${chave}-->`);
+}
+
+function patchHtml(htmlOriginal, d) {
+  let h = htmlOriginal;
+
+  // ── título da página
+  h = h.replace(/<title>[^<]*<\/title>/, `<title>Boletim IP Saloá — ${d.data}</title>`);
+
+  // ── data na capa
+  h = substituirMarcador(h, 'DATA', d.data);
+
+  // ── cabeçalho liturgia ED e Celebração
+  h = h.replace(
+    /<div class="lit-celebracao-titulo">[\s\S]*?<\/div>/,
+    `<div class="lit-celebracao-titulo">ESCOLA DOMINICAL – ${d.dataFmt}</div>`
+  );
+  h = h.replace(
+    /(<div id="aba-lit-celebracao"[\s\S]*?<div class="lit-celebracao-cabecalho">\s*)<div class="lit-celebracao-titulo">[\s\S]*?<\/div>/,
+    `$1<div class="lit-celebracao-titulo">CULTO DE CELEBRAÇÃO – ${d.dataFmt}</div>`
+  );
+
+  // ── Devocional — via marcadores
+  h = substituirMarcador(h, 'DEVOC_TITULO', d.devocTitulo);
+  h = substituirMarcador(h, 'DEVOC_REF', d.devocRef);
+  // Corpo: parágrafos + assinatura
+  const devocBlocoNovo = `\n        ${d.devocTexto}\n        <div class="assinatura">${d.devocAutor}</div>\n      `;
+  h = substituirMarcador(h, 'DEVOC_CORPO', devocBlocoNovo);
+
+  // ── Liturgia ED e Celebração
+  h = h.replace(
+    /(<div id="aba-lit-matutino"[\s\S]*?<div class="lit-celebracao-subtitulo">LITURGIA<\/div>\s*<\/div>\s*)([\s\S]*?)(<\/div>\s*<\/div>\s*<!-- ABA CELEBRAÇÃO)/,
+    `$1\n          ${d.litEdHtml}\n        $3`
+  );
+  h = h.replace(
+    /(<div id="aba-lit-celebracao"[\s\S]*?<div class="lit-celebracao-subtitulo">LITURGIA<\/div>\s*<\/div>\s*)([\s\S]*?)(<\/div>\s*<\/div>\s*<div class="rodape-secao")/,
+    `$1\n          ${d.litCelHtml}\n        $3`
+  );
+
+  // ── Símbolo de Fé — via marcadores
+  h = substituirMarcador(h, 'CATEC_NOME', d.catecNome);
+  h = substituirMarcador(h, 'CATEC_PERG', d.catecPerg);
+  h = substituirMarcador(h, 'CATEC_RESP', superscritosParaHtml(d.catecResp));
+  if (d.catecRefsHtml) {
+    h = substituirMarcador(h, 'CATEC_REFS', d.catecRefsHtml);
+  }
+
+  // ── Avisos — via marcador
+  let avisosHtmlFinal = d.avisosHtml;
+  if (d.secoes?.institucional) {
+    avisosHtmlFinal += d.usoImagemHtml || '';
+  } else {
+    avisosHtmlFinal += extrairAvisoUsoImagem(htmlOriginal);
+  }
+  h = substituirMarcador(h, 'AVISOS', '\n' + avisosHtmlFinal + '\n\n      ');
+
+  // ── Aniversariantes — via marcador
+  if (d.secoes?.aniversariantes) {
+    h = substituirMarcador(h, 'ANIV', d.anivHtml + '\n      ');
+  }
+
+  if (d.secoes?.institucional) {
+    // ── Liderança — pastor
+    h = h.replace(
+      /(<section[^>]*id="lideranca"[\s\S]*?PASTOR DESIGNADO PGAR<br>)[^<]*(<\/p>)/,
+      `$1${d.pastor}$2`
+    );
+    h = h.replace(
+      /(<div class="card-titulo">CONSELHO<\/div>\s*<p style="font-size: 0\.95rem; line-height: 1\.8; color: var\(--cor-texto\);">)([\s\S]*?)(<\/p>)/,
+      `$1${d.consMembros}$3`
+    );
+    h = h.replace(
+      /(<strong>PRESIDENTE:<\/strong><br>)[^<]*(<\/div>)/,
+      `$1${d.consPresidente}$2`
+    );
+    h = h.replace(
+      /(<strong>VICE-PRESIDENTE:<\/strong><br>)[^<]*(<\/div>)/,
+      `$1${d.consVice}$2`
+    );
+    h = h.replace(
+      /(<strong>SECRETÁRIO:<\/strong><br>)[^<]*(<\/div>)/,
+      `$1${d.consSecretario}$2`
+    );
+    h = h.replace(
+      /(<strong>REPRESENTANTE DA IGREJA NO PGAR:<\/strong><br>)[^<]*(<\/div>)/,
+      `$1${d.consRepresentante}$2`
+    );
+    h = h.replace(
+      /(<button class="accordion-btn">Junta Diaconal<\/button>[\s\S]*?<div style="margin-top: 1rem; font-size: 0.95rem; color: var\(--cor-texto\); line-height: 1.8;">)([\s\S]*?)(<strong>CONSELHEIRO:<\/strong><br>)/,
+      `$1${d.diaconos}<br><br>$3`
+    );
+    h = h.replace(
+      /(<button class="accordion-btn">Escola Bíblica Dominical<\/button>[\s\S]*?<div style="margin-top: 1rem; font-size: 0.95rem; color: var\(--cor-texto\); line-height: 1.8;">)([\s\S]*?)(<\/div>\s*<\/div>\s*<button class="accordion-btn">Departamentos)/,
+      `$1${d.ebdLider}$3`
+    );
+  }
+
+  if (d.secoes?.planejamento) {
+    // ── Planejamento
+    h = h.replace(
+      /(<div id="aba-plan-sem1"[^>]*>)([\s\S]*?)(<\/div>\s*<div id="aba-plan-sem2")/,
+      `$1\n        ${d.planSem1}\n      $3`
+    );
+    h = h.replace(
+      /(<div id="aba-plan-sem2"[^>]*>)([\s\S]*?)(<\/div>\s*<\/div>\s*<\/section>)/,
+      `$1\n        ${d.planSem2}\n      $3`
+    );
+  }
+
+  if (d.secoes?.institucional) {
+    // ── PIX / Banco
+    h = h.replace(/(<span class="key">Banco<\/span>\s*<span class="val">)[^<]*(<\/span>)/, `$1${d.banco}$2`);
+    h = h.replace(/(<span class="key">Agência<\/span>\s*<span class="val">)[^<]*(<\/span>)/, `$1${d.agencia}$2`);
+    h = h.replace(/(<span class="key">Conta Corrente<\/span>\s*<span class="val">)[^<]*(<\/span>)/, `$1${d.conta}$2`);
+    h = h.replace(/(<div class="pix-val" id="cnpj-text">)[^<]*(<\/div>)/, `$1${d.pix}$2`);
+  }
+
+  return h;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  PUBLICAÇÃO — GitHub API
+// ══════════════════════════════════════════════════════════════
+async function publicar() {
+  const token = getToken();
+  if (!token) {
+    mostrarStatus('❌ Cole seu token GitHub na barra de configuração', true);
+    return;
+  }
+  if (!await abrirModalConfirmacaoPublicacao()) {
+    mostrarStatus('ℹ️ Publicação cancelada. Nenhuma alteração foi enviada.');
+    return;
+  }
+
+  const btn = document.getElementById('btn-pub');
+  btn.disabled = true;
+  btn.textContent = '⏳ Publicando...';
+  mostrarStatus('🔄 Buscando versão atual do boletim...');
+
+  try {
+    // 1. Busca o arquivo atual + SHA
+    const resp = await fetch(`https://api.github.com/repos/${REPO}/contents/${ARQUIVO}`, {
+      headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(`GitHub: ${err.message || resp.status}`);
+    }
+
+    const info = await resp.json();
+    const sha = info.sha;
+
+    // Decodifica base64 do GitHub preservando caracteres especiais (UTF-8)
+    const bytes = Uint8Array.from(atob(info.content.replace(/\n/g,'')), c => c.charCodeAt(0));
+    const htmlAtual = new TextDecoder('utf-8').decode(bytes);
+
+    mostrarStatus('🔧 Aplicando atualizações...');
+
+    // 2. Coleta dados dos campos
+    const data = document.getElementById('data-boletim').value.trim() || 'DATA A DEFINIR';
+    const dataNum = data.match(/(\d+)\s+de\s+(\w+)\s+de\s+(\d+)/i);
+    let dataFmt = data;
+    if (dataNum) {
+      const mapa = {janeiro:'01',fevereiro:'02',março:'03',abril:'04',maio:'05',junho:'06',
+                    julho:'07',agosto:'08',setembro:'09',outubro:'10',novembro:'11',dezembro:'12'};
+      const dd = dataNum[1].padStart(2,'0'), mm = mapa[dataNum[2].toLowerCase()]||'00', aa = dataNum[3];
+      dataFmt = `${dd}/${mm}/${aa}`;
+    }
+
+    const devocTitulo = escHtml(document.getElementById('devoc-titulo').value.trim());
+    const devocRef = escHtml(document.getElementById('devoc-ref').value.trim());
+    const devocTexto = textoParaParas(document.getElementById('devoc-texto').value);
+    const devocAutor = escHtml(document.getElementById('devoc-autor').value.trim());
+
+    const litEdTexto = document.getElementById('lit-ed').value;
+    const litCelTexto = document.getElementById('lit-cel').value;
+    const litEdHtml = liturgiaParaHtml(litEdTexto);
+    const litCelHtml = liturgiaParaHtml(litCelTexto);
+
+    const catecNome = escHtml(document.getElementById('catec-nome')?.value.trim() || 'BREVE CATECISMO DE WESTMINSTER');
+    const catecPerg = escHtml(document.getElementById('catec-pergunta').value.trim());
+    const catecResp = escHtml(document.getElementById('catec-resposta').value.trim());
+    const catecRefs = document.getElementById('catec-refs').value.trim();
+    let catecRefsHtml = '';
+    if (catecRefs) {
+      catecRefsHtml = `\n        <div class="catec-referencias">\n`;
+      catecRefs.split('\n').forEach(l => {
+        if (l.trim()) catecRefsHtml += `          <p>${superscritosParaHtml(escHtml(l.trim()))}</p>\n`;
+      });
+      catecRefsHtml += `        </div>`;
+    }
+
+    const secoes = obterSecoesParaAtualizar();
+    const avisosHtml = avisosParaHtml({ incluirUsoImagem: false });
+    const usoImagemHtml = usoImagemParaHtml();
+    const anivHtml = aniversariantesParaHtml();
+    const pastor = escHtml(document.getElementById('pastor-nome').value.trim() || 'Rev. José Aragão Neto - (87) 9 8174-0995');
+    const consMembros = conselhoParagrafo();
+    const consPresidente = escHtml(document.getElementById('conselho-presidente').value.trim());
+    const consVice = escHtml(document.getElementById('conselho-vice').value.trim());
+    const consSecretario = escHtml(document.getElementById('conselho-secretario').value.trim());
+    const consRepresentante = escHtml(document.getElementById('conselho-representante').value.trim());
+    const diaconos = (document.getElementById('diaconos-lista').value || '').trim().split('\n').filter(l => l.trim()).map(l => escHtml(l.trim())).join('<br>');
+    const ebdLider = escHtml(document.getElementById('ebd-lideranca').value.trim()).replace(/\n/g,'<br>');
+    const banco = escHtml(document.getElementById('banco-nome').value.trim() || '&nbsp;');
+    const agencia = escHtml(document.getElementById('banco-agencia').value.trim() || '&nbsp;');
+    const conta = escHtml(document.getElementById('banco-conta').value.trim() || '&nbsp;');
+    const pix = escHtml(document.getElementById('banco-pix').value.trim() || '&nbsp;');
+
+    let planSem1 = `<div class="card"><div class="card-titulo">PLANEJAMENTO ${new Date().getFullYear()}<br>1º SEMESTRE</div></div>`;
+    let planSem2 = `<div class="card"><div class="card-titulo">PLANEJAMENTO ${new Date().getFullYear()}<br>2º SEMESTRE</div></div>`;
+    MESES.forEach((mes, i) => {
+      const texto = document.getElementById('plan-' + mes)?.value || '';
+      const bloco = planMesParaHtml(texto, mes);
+      if (i < 6) planSem1 += '\n        ' + bloco;
+      else planSem2 += '\n        ' + bloco;
+    });
+
+    // 3. Aplica patch no HTML original
+    const htmlNovo = patchHtml(htmlAtual, {
+      data, dataFmt,
+      devocTitulo, devocRef, devocTexto, devocAutor,
+      litEdHtml, litCelHtml,
+      catecNome, catecPerg, catecResp, catecRefsHtml,
+      avisosHtml, usoImagemHtml, anivHtml,
+      pastor, consMembros, consPresidente, consVice, consSecretario, consRepresentante,
+      diaconos, ebdLider,
+      banco, agencia, conta, pix,
+      planSem1, planSem2,
+      secoes
+    });
+
+    if (!htmlNovo || htmlNovo.length < 1000) {
+      throw new Error('O HTML gerado parece inválido. Verifique os campos e tente novamente.');
+    }
+
+    // 4. Envia para o GitHub (codifica UTF-8 → base64 corretamente)
+    mostrarStatus('📤 Enviando para o GitHub Pages...');
+    const encoder = new TextEncoder();
+    const encoded = encoder.encode(htmlNovo);
+    let binary = '';
+    encoded.forEach(b => binary += String.fromCharCode(b));
+    const conteudoBase64 = btoa(binary);
+
+    const respPut = await fetch(`https://api.github.com/repos/${REPO}/contents/${ARQUIVO}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: `Boletim atualizado — ${data}`,
+        content: conteudoBase64,
+        sha: sha
+      })
+    });
+
+    if (!respPut.ok) {
+      const err = await respPut.json();
+      throw new Error(`GitHub: ${err.message || respPut.status}`);
+    }
+
+    mostrarStatus(`✅ Publicado! O boletim de ${data} já está no ar. O site atualiza em 1-2 minutos.`);
+    tocarAlertaConclusao();
+    notificarConclusaoPublicacao(data);
+    salvarRascunho();
+
+  } catch (e) {
+    mostrarStatus(`❌ Erro: ${e.message}`, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🚀 Publicar no GitHub';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RASCUNHO — salva automaticamente no localStorage
+// ══════════════════════════════════════════════════════════════
+function salvarRascunho() {
+  // Campos semanais e institucionais (sem planejamento — muito grande)
+  const campos = ['data-boletim','devoc-titulo','devoc-ref','devoc-texto','devoc-autor',
+    'lit-ed','lit-cel','catec-nome','catec-pergunta','catec-resposta','catec-refs',
+    'pastor-nome','conselho-membros','conselho-presidente','conselho-vice',
+    'conselho-secretario','conselho-representante','diaconos-lista','ebd-lideranca',
+    'banco-nome','banco-agencia','banco-conta','banco-pix',
+    'uso-imagem-texto','uso-imagem-nome'];
+  const dados = {};
+  campos.forEach(id => { const el = document.getElementById(id); if (el) dados[id] = el.value; });
+
+  // Avisos SEM imagens (base64 é grande demais)
+  dados['_avisos'] = avisos.map(av => ({ ...av, imagemBase64: '' }));
+  dados['_aniversariantes'] = aniversariantes;
+  dados['_atualizar_secoes'] = obterSecoesParaAtualizar();
+  const tipoEl = document.getElementById('uso-imagem-tipo');
+  dados['_uso_imagem_tipo'] = tipoEl ? tipoEl.value : 'texto';
+
+  try {
+    // Limpa chave antiga antes de gravar para evitar acúmulo
+    localStorage.removeItem('ipsaloa_rascunho');
+    localStorage.setItem('ipsaloa_rascunho', JSON.stringify(dados));
+  } catch(e) {
+    // Se ainda estourar, limpa tudo e tenta de novo
+    try { localStorage.clear(); localStorage.setItem('ipsaloa_rascunho', JSON.stringify(dados)); } catch(e2) {}
+  }
+}
+
+function carregarRascunho() {
+  const raw = localStorage.getItem('ipsaloa_rascunho');
+  if (!raw) return;
+  try {
+    const dados = JSON.parse(raw);
+    Object.keys(dados).forEach(id => {
+      if (id === '_avisos') {
+        // Ao carregar: mantém só os marcados "manter"; os outros somem (nova semana)
+        avisos = (dados[id] || []).filter(a => a.manter);
+        renderAvisos();
+        return;
+      }
+      if (id === '_aniversariantes') {
+        aniversariantes = dados[id] || aniversariantes;
+        renderAniversariantes();
+        return;
+      }
+      if (id === '_atualizar_secoes') {
+        const secoes = dados[id] || {};
+        const map = {
+          aniversariantes: 'toggle-aniversariantes',
+          institucional: 'toggle-institucional',
+          planejamento: 'toggle-planejamento'
+        };
+        Object.keys(map).forEach(chave => {
+          const el = document.getElementById(map[chave]);
+          if (el && typeof secoes[chave] === 'boolean') el.checked = secoes[chave];
+        });
+        return;
+      }
+      if (id === '_uso_imagem_tipo') {
+        const el = document.getElementById('uso-imagem-tipo');
+        if (el) { el.value = dados[id]; toggleUsoImagemCampos(); }
+        return;
+      }
+      if (id === '_uso_imagem_base64') {
+        if (dados[id]) {
+          usoImagemBase64 = dados[id];
+          const prev = document.getElementById('uso-imagem-preview');
+          if (prev) { prev.src = usoImagemBase64; prev.style.display = 'block'; }
+        }
+        return;
+      }
+      const el = document.getElementById(id);
+      if (el) el.value = dados[id];
+    });
+  } catch(e) { console.warn('Rascunho inválido:', e); }
+}
+
+// Auto-salvar a cada 30s
+setInterval(salvarRascunho, 30000);
+
+function ativarAutosaveEditor() {
+  document.querySelectorAll('input, textarea, select').forEach(el => {
+    el.addEventListener('input', salvarRascunho);
+    el.addEventListener('change', salvarRascunho);
+  });
+  ['toggle-aniversariantes', 'toggle-institucional', 'toggle-planejamento'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('change', atualizarResumoPublicacao);
+  });
+
+  const modal = document.getElementById('modal-confirmacao-publicacao');
+  document.getElementById('modal-confirmacao-confirmar')?.addEventListener('click', () => fecharModalConfirmacaoPublicacao(true));
+  document.getElementById('modal-confirmacao-cancelar')?.addEventListener('click', () => fecharModalConfirmacaoPublicacao(false));
+  document.getElementById('modal-confirmacao-fechar')?.addEventListener('click', () => fecharModalConfirmacaoPublicacao(false));
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) fecharModalConfirmacaoPublicacao(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('aberto')) {
+      fecharModalConfirmacaoPublicacao(false);
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  STATUS BAR
+// ══════════════════════════════════════════════════════════════
+let statusTimer;
+function mostrarStatus(msg, erro = false) {
+  const bar = document.getElementById('status-bar');
+  bar.textContent = msg;
+  bar.className = 'status-bar visivel' + (erro ? ' erro' : '');
+  clearTimeout(statusTimer);
+  if (!erro) statusTimer = setTimeout(() => { bar.className = 'status-bar'; }, 5000);
+}
+
+// ══════════════════════════════════════════════════════════════
+//  INICIALIZAÇÃO
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  atualizarStatusToken();
+  renderAvisos();
+  renderAniversariantes();
+  renderPlanejamento();
+  carregarRascunho();
+  atualizarResumoPublicacao();
+  ativarAutosaveEditor();
+});
+</script>
+
+</body>
+</html>
