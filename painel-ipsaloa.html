@@ -80,22 +80,42 @@
       border-bottom: 1px solid var(--borda);
       padding: 0 2rem;
       display: flex;
-      gap: 0;
+      gap: 0.35rem;
+      align-items: stretch;
+    }
+    .aba-nav-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      padding-left: 0.7rem;
+    }
+    .aba-nav-item input[type="checkbox"] {
+      width: 0.95rem;
+      height: 0.95rem;
+      accent-color: var(--verde);
+      cursor: pointer;
+    }
+    .aba-nav-item.ativa {
+      border-bottom-color: var(--verde);
+      background: rgba(11,93,59,0.035);
     }
     .aba-nav-btn {
-      padding: 0.9rem 1.4rem;
+      padding: 0.9rem 0.8rem 0.9rem 0.25rem;
       border: none;
       background: none;
       font-size: 0.82rem;
       font-weight: 600;
       color: var(--texto-suave);
       cursor: pointer;
-      border-bottom: 3px solid transparent;
+      border-bottom: 0;
       transition: all 0.2s;
       letter-spacing: 0.03em;
+      white-space: nowrap;
     }
     .aba-nav-btn:hover { color: var(--verde); }
-    .aba-nav-btn.ativa { color: var(--verde); border-bottom-color: var(--verde); }
+    .aba-nav-item.ativa .aba-nav-btn { color: var(--verde); }
 
     /* ── CONTEÚDO ── */
     .aba-conteudo { display: none; padding: 2rem; max-width: 860px; margin: 0 auto; }
@@ -136,83 +156,6 @@
       background: var(--branco);
       transition: border-color 0.2s;
       resize: vertical;
-    }
-    .secao-marcador {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.9rem 1rem;
-      margin: 0 0 1rem;
-      background: rgba(11,93,59,0.05);
-      border: 1px solid var(--borda);
-      border-radius: 12px;
-    }
-    .secao-marcador input[type="checkbox"] {
-      width: 1.05rem;
-      height: 1.05rem;
-      accent-color: var(--verde);
-      flex: 0 0 auto;
-    }
-    .secao-marcador strong {
-      display: block;
-      font-size: 0.8rem;
-      color: var(--verde);
-      margin-bottom: 0.1rem;
-    }
-    .secao-marcador span {
-      display: block;
-      font-size: 0.76rem;
-      color: var(--texto-suave);
-      line-height: 1.5;
-    }
-    .resumo-publicacao {
-      background: var(--branco);
-      border: 1px solid var(--borda);
-      border-radius: 14px;
-      padding: 1rem 1.1rem;
-      margin-bottom: 1.4rem;
-      box-shadow: var(--sombra);
-    }
-    .resumo-publicacao h3 {
-      font-size: 0.82rem;
-      color: var(--verde);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      margin-bottom: 0.8rem;
-    }
-    .resumo-publicacao-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.9rem;
-    }
-    .resumo-publicacao-bloco {
-      background: rgba(11,93,59,0.04);
-      border: 1px solid rgba(11,93,59,0.08);
-      border-radius: 12px;
-      padding: 0.85rem 0.95rem;
-    }
-    .resumo-publicacao-bloco.mantido {
-      background: rgba(92,110,100,0.05);
-      border-color: rgba(92,110,100,0.12);
-    }
-    .resumo-publicacao-bloco strong {
-      display: block;
-      font-size: 0.78rem;
-      margin-bottom: 0.5rem;
-      color: var(--texto);
-    }
-    .resumo-publicacao-bloco ul {
-      margin: 0;
-      padding-left: 1rem;
-      color: var(--texto-suave);
-      font-size: 0.76rem;
-      line-height: 1.6;
-    }
-    .resumo-publicacao-rodape {
-      margin-top: 0.8rem;
-      font-size: 0.74rem;
-      color: var(--texto-suave);
-      line-height: 1.5;
     }
     .modal-confirmacao {
       position: fixed;
@@ -450,6 +393,48 @@
       font-weight: 700;
       cursor: pointer;
     }
+    .ensino-series-lista { margin-top: 0.8rem; }
+    .ensino-serie-card {
+      border: 1px solid var(--borda);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 0.8rem;
+      background: rgba(11,93,59,0.035);
+    }
+    .ensino-serie-topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+    .ensino-serie-topo strong {
+      color: var(--verde2);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .btn-add-serie {
+      background: rgba(11,93,59,0.06);
+      border: 1px dashed var(--verde2);
+      color: var(--verde2);
+      border-radius: 8px;
+      padding: 0.6rem;
+      width: 100%;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .btn-remover-serie {
+      background: #fee2e2;
+      color: #dc2626;
+      border: none;
+      border-radius: 6px;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
     /* ── STATUS ── */
     #status-bar {
@@ -529,9 +514,6 @@
       overflow: hidden;
     }
     @media (max-width: 760px) {
-      .resumo-publicacao-grid {
-        grid-template-columns: 1fr;
-      }
       .modal-confirmacao-corpo {
         grid-template-columns: 1fr;
       }
@@ -648,30 +630,6 @@
       backdrop-filter: blur(8px);
     }
 
-    .aba-intro {
-      background: linear-gradient(135deg, rgba(11,93,59,0.08), rgba(18,160,90,0.03));
-      border: 1px solid rgba(11,93,59,0.12);
-      border-radius: 18px;
-      padding: 1rem 1.1rem;
-      margin-bottom: 1.35rem;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
-    }
-
-    .aba-intro strong {
-      display: block;
-      color: var(--verde);
-      font-size: 0.84rem;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 0.35rem;
-    }
-
-    .aba-intro p {
-      font-size: 0.86rem;
-      color: var(--texto-suave);
-      line-height: 1.65;
-    }
-
     .campo input[type="text"],
     .campo textarea,
     .campo select,
@@ -695,48 +653,6 @@
       box-shadow: 0 12px 32px rgba(11,93,59,0.08);
     }
 
-    .painel-meta {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.9rem;
-      margin: 0.4rem 0 1.4rem;
-    }
-
-    .meta-card {
-      background: rgba(255,255,255,0.78);
-      border: 1px solid rgba(11,93,59,0.1);
-      border-radius: 18px;
-      padding: 0.95rem 1rem;
-      box-shadow: 0 10px 24px rgba(11,93,59,0.05);
-    }
-
-    .meta-card strong {
-      display: block;
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--verde2);
-      margin-bottom: 0.35rem;
-    }
-
-    .meta-card span {
-      display: block;
-      font-size: 0.86rem;
-      color: var(--texto-suave);
-      line-height: 1.55;
-    }
-
-    .dica-compartilhar {
-      margin-top: 0.75rem;
-      padding: 0.85rem 0.95rem;
-      border-radius: 12px;
-      background: rgba(11,93,59,0.05);
-      border: 1px solid rgba(11,93,59,0.1);
-      color: var(--verde2);
-      font-size: 0.76rem;
-      line-height: 1.55;
-    }
-
     .campo select {
       width: 100%;
       padding: 0.6rem 0.85rem;
@@ -751,10 +667,6 @@
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
-      }
-
-      .painel-meta {
-        grid-template-columns: 1fr;
       }
 
       .painel-shell {
@@ -792,57 +704,41 @@
 
 <!-- ABAS NAV -->
 <div class="abas-nav">
-  <button class="aba-nav-btn ativa" onclick="mudarAba('semanal', this)">📅 Semanal</button>
-  <button class="aba-nav-btn" onclick="mudarAba('avisos', this)">📢 Avisos</button>
-  <button class="aba-nav-btn" onclick="mudarAba('mensal', this)">🎂 Mensal</button>
-  <button class="aba-nav-btn" onclick="mudarAba('institucional', this)">🏛️ Institucional</button>
-  <button class="aba-nav-btn" onclick="mudarAba('planejamento', this)">🗓️ Planejamento</button>
+  <div class="aba-nav-item ativa">
+    <input type="checkbox" id="toggle-semanal" checked onclick="event.stopPropagation()" onchange="atualizarResumoPublicacao(); salvarRascunho();">
+    <button class="aba-nav-btn" onclick="mudarAba('semanal', this)">📅 Semanal</button>
+  </div>
+  <div class="aba-nav-item">
+    <input type="checkbox" id="toggle-avisos" checked onclick="event.stopPropagation()" onchange="atualizarResumoPublicacao(); salvarRascunho();">
+    <button class="aba-nav-btn" onclick="mudarAba('avisos', this)">📢 Avisos</button>
+  </div>
+  <div class="aba-nav-item">
+    <input type="checkbox" id="toggle-aniversariantes" checked onclick="event.stopPropagation()" onchange="atualizarResumoPublicacao(); salvarRascunho();">
+    <button class="aba-nav-btn" onclick="mudarAba('mensal', this)">🎂 Mensal</button>
+  </div>
+  <div class="aba-nav-item">
+    <input type="checkbox" id="toggle-ensino" checked onclick="event.stopPropagation()" onchange="atualizarResumoPublicacao(); salvarRascunho();">
+    <button class="aba-nav-btn" onclick="mudarAba('ensino', this)">📚 ED / Ensino</button>
+  </div>
+  <div class="aba-nav-item">
+    <input type="checkbox" id="toggle-institucional" checked onclick="event.stopPropagation()" onchange="atualizarResumoPublicacao(); salvarRascunho();">
+    <button class="aba-nav-btn" onclick="mudarAba('institucional', this)">🏛️ Institucional</button>
+  </div>
+  <div class="aba-nav-item">
+    <input type="checkbox" id="toggle-planejamento" checked onclick="event.stopPropagation()" onchange="atualizarResumoPublicacao(); salvarRascunho();">
+    <button class="aba-nav-btn" onclick="mudarAba('planejamento', this)">🗓️ Planejamento</button>
+  </div>
 </div>
 
 <div class="painel-shell">
-  <div class="painel-meta">
-    <div class="meta-card">
-      <strong>Fluxo Semanal</strong>
-      <span>Atualize data, devocional, liturgias e avisos. Esses são os blocos que mais mudam a cada edição.</span>
-    </div>
-    <div class="meta-card">
-      <strong>Compartilhamento</strong>
-      <span>Avisos e devocional publicados aqui seguem o fluxo de compartilhamento do boletim digital automaticamente.</span>
-    </div>
-    <div class="meta-card">
-      <strong>Publicação</strong>
-      <span>O painel aplica alterações sobre o `index.html` atual do boletim para preservar layout, scripts e recursos novos.</span>
-    </div>
-  </div>
-  <div class="resumo-publicacao" id="resumo-publicacao">
-    <h3>Antes de Publicar</h3>
-    <div class="resumo-publicacao-grid">
-      <div class="resumo-publicacao-bloco">
-        <strong>Será atualizado</strong>
-        <ul id="resumo-atualiza"></ul>
-      </div>
-      <div class="resumo-publicacao-bloco mantido">
-        <strong>Será mantido como está</strong>
-        <ul id="resumo-mantem"></ul>
-      </div>
-    </div>
-    <div class="resumo-publicacao-rodape" id="resumo-publicacao-rodape"></div>
-  </div>
-
 <!-- ════════════════════════════════════════════
      ABA SEMANAL
 ════════════════════════════════════════════ -->
 <div class="aba-conteudo ativa" id="aba-semanal">
-  <div class="aba-intro">
-    <strong>Rotina Principal</strong>
-    <p>Use esta aba para a edição da semana: data, devocional, liturgias e símbolo de fé. O objetivo aqui é manter o conteúdo editorial alinhado com o boletim digital sem alterar a estrutura do site.</p>
-  </div>
-
   <div class="secao-titulo">Capa</div>
   <div class="campo">
     <label>Data do Domingo</label>
     <input type="text" id="data-boletim" placeholder="Ex: 20 de abril de 2026">
-    <div class="dica">Aparece na capa, no título da página e nos cabeçalhos da liturgia.</div>
   </div>
 
   <div class="secao-titulo">Devocional da Semana</div>
@@ -858,7 +754,6 @@
     <label>Texto do Devocional</label>
     <textarea class="grande" id="devoc-texto" placeholder="Cole aqui o texto corrido do devocional. Separe os parágrafos com uma linha em branco. O sistema formata automaticamente."></textarea>
     <div class="dica">Separe os parágrafos com uma linha em branco. Não precisa usar tags HTML.</div>
-    <div class="dica-compartilhar">No boletim publicado, a devocional terá fluxo de compartilhamento próprio. O link compartilhado abrirá a seção diretamente no modo de leitura da devocional.</div>
   </div>
   <div class="campo">
     <label>Assinatura do Autor</label>
@@ -908,7 +803,6 @@ Bênção Apostólica"></textarea>
   <div class="campo">
     <label>Nome do Documento <span style="font-weight:400;">(aparece no cabeçalho da seção)</span></label>
     <input type="text" id="catec-nome" placeholder="Ex: Breve Catecismo de Westminster, Confissão de Fé de Westminster, Credo Apostólico...">
-    <div class="dica">Digite o nome exato do símbolo que será exibido no boletim esta semana.</div>
   </div>
   <div class="campo">
     <label>Pergunta / Afirmação</label>
@@ -921,7 +815,6 @@ Bênção Apostólica"></textarea>
   <div class="campo">
     <label>Referências Bíblicas <span style="font-weight:400;">(opcional)</span></label>
     <textarea class="pequena" id="catec-refs" placeholder="1 2Tm 3.16; Is 8.20; Lc 16.29,31&#10;2 Gl 1.8,9; 1Co 2.13"></textarea>
-    <div class="dica">Uma referência por linha. Deixe em branco se não houver.</div>
   </div>
 
 </div>
@@ -930,19 +823,7 @@ Bênção Apostólica"></textarea>
      ABA AVISOS
 ════════════════════════════════════════════ -->
 <div class="aba-conteudo" id="aba-avisos">
-  <div class="aba-intro">
-    <strong>Avisos Compartilháveis</strong>
-    <p>Todo aviso criado aqui passa a ser compartilhável automaticamente no boletim digital. O título ajuda a formar o identificador do link compartilhado, e o texto do card vira a base do resumo enviado na mensagem.</p>
-  </div>
-
   <div class="secao-titulo">Avisos da Igreja</div>
-  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1.2rem; line-height:1.7;">
-    Adicione quantos avisos precisar. Cada aviso pode ser só texto, só imagem, ou imagem com texto.<br>
-    Marque <strong>"Manter semana que vem"</strong> nos avisos que devem continuar na próxima edição — eles já virão carregados automaticamente.<br>
-    O aviso de <strong>Uso de Imagem</strong> fica na aba <strong>Institucional</strong> e é editável lá.<br>
-    Avisos com imagem também receberão botão de download no boletim final.
-  </p>
-
   <div id="lista-avisos"></div>
   <button class="btn-add-aviso" onclick="addAviso()">+ Adicionar Aviso</button>
 
@@ -952,47 +833,63 @@ Bênção Apostólica"></textarea>
      ABA MENSAL
 ════════════════════════════════════════════ -->
 <div class="aba-conteudo" id="aba-mensal">
-  <div class="aba-intro">
-    <strong>Conteúdo Recorrente</strong>
-    <p>Esta aba reúne informações que não costumam mudar toda semana. Atualize apenas quando houver alteração real no mês ou na lista de aniversariantes.</p>
-  </div>
-  <label class="secao-marcador">
-    <input type="checkbox" id="toggle-aniversariantes" checked>
-    <span>
-      <strong>Atualizar aniversariantes ao publicar</strong>
-      Quando este marcador estiver ativo, a arte de aniversariantes será atualizada. Desmarcado, ela permanece exatamente como está no boletim atual.
-    </span>
-  </label>
-
   <div class="secao-titulo">Aniversariantes do Mês</div>
-  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1rem;">
-    Atualize apenas quando mudar. Informe o dia (número) e o nome completo.
-  </p>
   <div id="lista-aniversariantes"></div>
   <button class="btn-add-aniv" onclick="addAniversariante()">+ Adicionar Aniversariante</button>
 
 </div>
 
 <!-- ════════════════════════════════════════════
+     ABA ED / ENSINO
+════════════════════════════════════════════ -->
+<div class="aba-conteudo" id="aba-ensino">
+  <div class="secao-titulo">Inscrição e Chamada</div>
+  <div class="card-inst">
+    <h4>Atualização anual</h4>
+    <div class="campo">
+      <label>Link do formulário de inscrição</label>
+      <input type="text" id="ensino-inscricao-link" value="https://docs.google.com/forms/d/e/1FAIpQLSdHTP0HpiaHZwcat8x3Y7MdXfc_PisTRgkO5H29IfbPL5IOrQ/viewform" placeholder="Cole aqui o link do Google Forms">
+    </div>
+    <div class="grid2">
+      <div class="campo">
+        <label>Chamada — Classe Adultos</label>
+        <input type="text" id="ensino-chamada-adultos" value="https://docs.google.com/spreadsheets/d/1ykhP_Y1ensELs4KuIwgS_AMvZCO4gMk6Qb2_5dsnxIA/edit" placeholder="Link da planilha de chamada">
+      </div>
+      <div class="campo">
+        <label>Chamada — Adolescentes & Jovens</label>
+        <input type="text" id="ensino-chamada-jovens" value="https://docs.google.com/spreadsheets/d/1ykhP_Y1ensELs4KuIwgS_AMvZCO4gMk6Qb2_5dsnxIA/edit" placeholder="Link da planilha de chamada">
+      </div>
+      <div class="campo">
+        <label>Chamada — Crianças / Imago Dei</label>
+        <input type="text" id="ensino-chamada-criancas" value="https://docs.google.com/spreadsheets/d/1ykhP_Y1ensELs4KuIwgS_AMvZCO4gMk6Qb2_5dsnxIA/edit" placeholder="Link da planilha de chamada">
+      </div>
+    </div>
+  </div>
+
+  <div class="secao-titulo">Materiais das Aulas</div>
+  <div class="card-inst">
+    <h4>Classe Adultos</h4>
+    <div id="ensino-series-adultos" class="ensino-series-lista"></div>
+    <button type="button" class="btn-add-serie" onclick="addSerieEnsino('adultos')">+ Nova série</button>
+  </div>
+
+  <div class="card-inst">
+    <h4>Adolescentes & Jovens</h4>
+    <div id="ensino-series-jovens" class="ensino-series-lista"></div>
+    <button type="button" class="btn-add-serie" onclick="addSerieEnsino('jovens')">+ Nova série</button>
+  </div>
+
+  <div class="card-inst">
+    <h4>Crianças / Imago Dei</h4>
+    <div id="ensino-series-criancas" class="ensino-series-lista"></div>
+    <button type="button" class="btn-add-serie" onclick="addSerieEnsino('criancas')">+ Nova série</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
      ABA INSTITUCIONAL
 ════════════════════════════════════════════ -->
 <div class="aba-conteudo" id="aba-institucional">
-  <div class="aba-intro">
-    <strong>Base Institucional</strong>
-    <p>Esses dados sustentam seções permanentes do boletim. Edite com cuidado para não substituir informações estáveis por conteúdo semanal.</p>
-  </div>
-  <label class="secao-marcador">
-    <input type="checkbox" id="toggle-institucional" checked>
-    <span>
-      <strong>Atualizar institucional ao publicar</strong>
-      Controla liderança, dados bancários e o aviso fixo de uso de imagem. Desmarcado, o boletim mantém a versão institucional já publicada.
-    </span>
-  </label>
-
-  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1.5rem; padding: 0.8rem 1rem; background:#fff3cd; border-radius:8px; border:1px solid #ffc107;">
-    ⚠️ Estas informações mudam raramente (anual ou eventual). Edite apenas quando necessário.
-  </p>
-
   <div class="secao-titulo">Pastor e Conselho</div>
   <div class="card-inst">
     <h4>Pastor Designado</h4>
@@ -1080,9 +977,6 @@ Classe Infantil (Manhã): Nathália Valença Marino Aragão, Elizabete Barbosa C
   </div>
 
   <div class="secao-titulo">Aviso de Uso de Imagem</div>
-  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1rem;">
-    Este aviso aparece fixo no final da seção de Avisos toda semana. Troque o tipo se quiser usar uma imagem ou imagem com legenda.
-  </p>
   <div class="card-inst">
     <div class="campo">
       <label>Tipo</label>
@@ -1095,7 +989,6 @@ Classe Infantil (Manhã): Nathália Valença Marino Aragão, Elizabete Barbosa C
     <div id="uso-imagem-upload" style="display:none;" class="campo">
       <label>Nome da imagem (pasta imagens/ do repositório)</label>
       <input type="text" id="uso-imagem-nome" placeholder="Ex: uso-imagem.png">
-      <div class="dica">Digite apenas o nome do arquivo que está na pasta <code>imagens/</code> do repositório.</div>
     </div>
     <div id="uso-imagem-texto-wrap" class="campo">
       <label>Texto</label>
@@ -1113,22 +1006,6 @@ Ao ingressar em nosso templo, você reconhece e concorda com a utilização de s
      ABA PLANEJAMENTO
 ════════════════════════════════════════════ -->
 <div class="aba-conteudo" id="aba-planejamento">
-  <div class="aba-intro">
-    <strong>Planejamento Anual</strong>
-    <p>O planejamento é menos frequente, mas precisa permanecer coerente com a timeline do boletim. Este bloco serve para revisões anuais ou ajustes pontuais de agenda.</p>
-  </div>
-  <label class="secao-marcador">
-    <input type="checkbox" id="toggle-planejamento" checked>
-    <span>
-      <strong>Atualizar planejamento ao publicar</strong>
-      Quando desmarcado, o planejamento anual permanece intacto no boletim, mesmo que os campos desta aba tenham sido alterados no painel.
-    </span>
-  </label>
-
-  <p style="font-size:0.82rem; color:var(--texto-suave); margin-bottom:1.5rem; padding: 0.8rem 1rem; background:#fff3cd; border-radius:8px; border:1px solid #ffc107;">
-    ⚠️ Atualizar anualmente. Cole o texto dos eventos de cada mês — um evento por linha, com o dia na frente. O sistema formata a timeline automaticamente.
-  </p>
-
   <div class="liturgia-dica">
     <strong>Formato de cada linha:</strong>
     Dia · Descrição do evento. Exemplos:<br>
@@ -1238,9 +1115,9 @@ function atualizarStatusToken() {
 // ══════════════════════════════════════════════════════════════
 function mudarAba(id, btn) {
   document.querySelectorAll('.aba-conteudo').forEach(a => a.classList.remove('ativa'));
-  document.querySelectorAll('.aba-nav-btn').forEach(b => b.classList.remove('ativa'));
+  document.querySelectorAll('.aba-nav-item').forEach(b => b.classList.remove('ativa'));
   document.getElementById('aba-' + id).classList.add('ativa');
-  btn.classList.add('ativa');
+  btn.closest('.aba-nav-item')?.classList.add('ativa');
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1281,7 +1158,6 @@ function renderAvisos() {
         <label>Título do Aviso</label>
         <input type="text" value="${escHtml(av.titulo)}" placeholder="Ex: 🎉 128 Anos"
           oninput="atualizarAviso(${av.id}, 'titulo', this.value)">
-        <div class="dica">O título aparece no card publicado e ajuda a formar o link de compartilhamento desse aviso.</div>
       </div>
 
       ${av.tipo !== 'texto' ? `
@@ -1289,7 +1165,6 @@ function renderAvisos() {
         <label>Nome da imagem (pasta imagens/ do repositório)</label>
         <input type="text" value="${escHtml(av.imagemNome)}" placeholder="Ex: Oficiais.jpeg"
           oninput="atualizarAviso(${av.id}, 'imagemNome', this.value)">
-        <div class="dica">Digite apenas o nome do arquivo. A imagem deve estar na pasta <code>imagens/</code> do repositório GitHub.</div>
       </div>` : ''}
 
       ${av.tipo !== 'imagem' ? `
@@ -1297,15 +1172,12 @@ function renderAvisos() {
         <label>${av.tipo === 'misto' ? 'Texto abaixo da imagem' : 'Texto do Aviso'}</label>
         <textarea class="grande" oninput="atualizarAviso(${av.id}, 'corpo', this.value)"
           placeholder="Cole o texto aqui. Separe parágrafos com linha em branco. Use **texto** para negrito.">${escHtml(av.corpo)}</textarea>
-        <div class="dica">Esse conteúdo também será usado como base da legenda curta no compartilhamento do aviso.</div>
       </div>` : ''}
 
       <label class="manter-label">
         <input type="checkbox" ${av.manter?'checked':''} onchange="atualizarAviso(${av.id}, 'manter', this.checked); renderAvisos();">
         <span>📌 Manter semana que vem</span>
       </label>
-
-      <div class="dica-compartilhar">Fluxo no boletim final: botão Compartilhar automático, link próprio do aviso e modo de leitura focado nesse card quando o link for aberto.</div>
     `;
     lista.appendChild(div);
   });
@@ -1596,6 +1468,221 @@ function planMesParaHtml(textoMes, nomeMes) {
   return `<div class="card"><div class="card-titulo">${escHtml(nomeMes)}</div><ul class="timeline">${items}</ul></div>`;
 }
 
+function valorCampo(id) {
+  return document.getElementById(id)?.value.trim() || '';
+}
+
+const ENSINO_CLASSES = {
+  adultos: {
+    titulo: '👥 Classe Adultos',
+    desc: 'Materiais e estudos da sala dos adultos.',
+    cor: 'var(--cor-primaria)',
+    botaoPadrao: '📘 Acessar material (Drive)'
+  },
+  jovens: {
+    titulo: '📱 Adolescentes & Jovens',
+    desc: 'Materiais e estudos da classe de adolescentes e jovens.',
+    cor: 'var(--cor-primaria-2)',
+    botaoPadrao: '📱 Acessar material (Drive)'
+  },
+  criancas: {
+    titulo: '🧸 Crianças (Imago Dei)',
+    desc: 'Materiais e estudos da classe infantil.',
+    cor: 'var(--cor-texto-suave)',
+    botaoPadrao: '🧸 Acessar material (Drive)'
+  }
+};
+
+let ensinoSeries = {
+  adultos: [{
+    id: 1,
+    imagem: '',
+    nome: 'Estudos em Malaquias',
+    botao: '📘 Estudos em Malaquias (Drive)',
+    link: 'https://drive.google.com/drive/folders/1C9sD2DkmFwShMDmZSj3QvmM41xQKWtuI?usp=sharing'
+  }],
+  jovens: [],
+  criancas: []
+};
+
+function addSerieEnsino(classe, dados) {
+  if (!ensinoSeries[classe]) ensinoSeries[classe] = [];
+  const serie = dados || {
+    id: Date.now(),
+    imagem: '',
+    nome: '',
+    botao: ENSINO_CLASSES[classe]?.botaoPadrao || 'Acessar material (Drive)',
+    link: ''
+  };
+  if (!dados) ensinoSeries[classe].push(serie);
+  renderEnsinoSeries();
+  salvarRascunho();
+}
+
+function removerSerieEnsino(classe, id) {
+  ensinoSeries[classe] = (ensinoSeries[classe] || []).filter(s => s.id !== id);
+  renderEnsinoSeries();
+  salvarRascunho();
+}
+
+function atualizarSerieEnsino(classe, id, campo, valor) {
+  const serie = (ensinoSeries[classe] || []).find(s => s.id === id);
+  if (serie) {
+    serie[campo] = valor;
+    salvarRascunho();
+  }
+}
+
+function renderEnsinoSeries() {
+  Object.keys(ENSINO_CLASSES).forEach(classe => {
+    const lista = document.getElementById('ensino-series-' + classe);
+    if (!lista) return;
+    const series = ensinoSeries[classe] || [];
+    lista.innerHTML = '';
+    series.forEach((serie, idx) => {
+      const div = document.createElement('div');
+      div.className = 'ensino-serie-card';
+      div.innerHTML = `
+        <div class="ensino-serie-topo">
+          <strong>Série ${idx + 1}</strong>
+          <button type="button" class="btn-remover-serie" onclick="removerSerieEnsino('${classe}', ${serie.id})">✕ Excluir</button>
+        </div>
+        <div class="grid2">
+          <div class="campo">
+            <label>Imagem da série <span style="font-weight:400;">(opcional)</span></label>
+            <input type="text" value="${escHtml(serie.imagem || '')}" placeholder="Ex: malaquias.png"
+              oninput="atualizarSerieEnsino('${classe}', ${serie.id}, 'imagem', this.value)">
+          </div>
+          <div class="campo">
+            <label>Nome da série</label>
+            <input type="text" value="${escHtml(serie.nome || '')}" placeholder="Ex: Estudos em Malaquias"
+              oninput="atualizarSerieEnsino('${classe}', ${serie.id}, 'nome', this.value)">
+          </div>
+        </div>
+        <div class="grid2">
+          <div class="campo">
+            <label>Texto do botão</label>
+            <input type="text" value="${escHtml(serie.botao || '')}" placeholder="${escHtml(ENSINO_CLASSES[classe].botaoPadrao)}"
+              oninput="atualizarSerieEnsino('${classe}', ${serie.id}, 'botao', this.value)">
+          </div>
+          <div class="campo">
+            <label>Link do material</label>
+            <input type="text" value="${escHtml(serie.link || '')}" placeholder="Cole aqui o link do Drive"
+              oninput="atualizarSerieEnsino('${classe}', ${serie.id}, 'link', this.value)">
+          </div>
+        </div>
+      `;
+      lista.appendChild(div);
+    });
+  });
+}
+
+function coletarEnsinoDados() {
+  return {
+    inscricaoLink: valorCampo('ensino-inscricao-link'),
+    chamadaAdultos: valorCampo('ensino-chamada-adultos'),
+    chamadaJovens: valorCampo('ensino-chamada-jovens'),
+    chamadaCriancas: valorCampo('ensino-chamada-criancas'),
+    materiais: JSON.parse(JSON.stringify(ensinoSeries))
+  };
+}
+
+function linkEnsinoHtml(url, texto, extraStyle = '') {
+  if (!url) return '';
+  return `<a href="${escHtml(url)}" target="_blank" class="aba-btn" style="border-color: rgba(11,93,59,0.2); justify-content: flex-start; padding-left: 1.2rem;${extraStyle}">${escHtml(texto)}</a>`;
+}
+
+function serieEnsinoHtml(serie, cor, botaoPadrao) {
+  const nome = (serie.nome || '').trim();
+  const link = (serie.link || '').trim();
+  const imagem = (serie.imagem || '').trim();
+  if (!nome && !link && !imagem) return '';
+  const img = imagem
+    ? `<img src="imagens/${escHtml(imagem)}" alt="${escHtml(nome || 'Material da série')}" style="width:100%; border-radius:12px; margin:0.3rem 0 0.8rem; display:block;">`
+    : '';
+  const titulo = nome
+    ? `<p style="font-size:0.92rem; margin-bottom: 0.7rem; color:${cor}; font-weight:700;">Série: ${escHtml(nome)}</p>`
+    : '';
+  const botao = link
+    ? `<a href="${escHtml(link)}" target="_blank" style="display: flex; gap: 0.6rem; align-items: center; background: rgba(11,93,59,0.05); padding: 0.8rem 1rem; border-radius: 12px; text-decoration: none; color: ${cor}; font-weight: 700; font-size: 0.95rem; margin-bottom:0.85rem;">${escHtml(serie.botao || botaoPadrao)}</a>`
+    : '';
+  return `${img}${titulo}${botao}`;
+}
+
+function materialEnsinoHtml(classe, series = []) {
+  const cfg = ENSINO_CLASSES[classe];
+  const conteudo = (series || [])
+    .map(serie => serieEnsinoHtml(serie, cfg.cor, cfg.botaoPadrao))
+    .filter(Boolean)
+    .join('\n          ') || `<p style="font-size:0.85rem; color:var(--cor-texto-suave); font-style:italic;">Nenhum material novo no momento.</p>`;
+
+  return `
+        <div class="card" style="border-left-color: ${cfg.cor};">
+          <div class="card-titulo" style="font-size: 1.1rem; color: ${cfg.cor};">${cfg.titulo}</div>
+          <p style="font-size:0.88rem; margin-bottom: 0.5rem; color:var(--cor-texto-suave);">${cfg.desc}</p>
+          ${conteudo}
+        </div>`;
+}
+
+function ensinoParaHtml(ensino) {
+  const adulto = ensino.materiais.adultos || [];
+  const jovens = ensino.materiais.jovens || [];
+  const criancas = ensino.materiais.criancas || [];
+
+  return `
+      <!-- ABAS EBD -->
+      <div class="historia-abas" style="margin-bottom: 2rem;">
+        <button class="aba-btn ativa" onclick="trocarAba('ebd-inscricoes')">📝 Inscrição</button>
+        <button class="aba-btn" onclick="trocarAba('ebd-chamadas')">✅ Chamada</button>
+        <button class="aba-btn" onclick="trocarAba('ebd-materiais')">📂 Material</button>
+      </div>
+
+      <!-- ABA INSCRIÇÃO -->
+      <div id="aba-ebd-inscricoes" class="aba-conteudo ativa">
+        <div class="card" style="text-align: center; border-left: none; padding: 1.5rem;">
+          <h3 style="color: var(--cor-primaria); font-family: 'Cormorant Garamond', serif; font-size: 1.4rem;">Participe das nossas classes!</h3>
+          <p style="color: var(--cor-texto-suave); font-size: 0.95rem; margin-top: 0.5rem; line-height: 1.6;">A Escola Dominical é o coração do ensino da nossa Igreja. Escolha a sua classe e faça já a sua inscrição para nossos módulos.</p>
+
+          <div style="margin-top: 1.5rem;">
+            <a href="${escHtml(ensino.inscricaoLink)}" target="_blank" class="btn-download" style="padding: 1rem 2rem; border-radius: 12px; display: inline-flex; width: 100%; justify-content: center; font-size: 1rem;">
+              ✍️ Fazer minha Inscrição
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA CHAMADAS -->
+      <div id="aba-ebd-chamadas" class="aba-conteudo">
+        <div class="card" style="border-left-color: var(--cor-primaria);">
+          <div class="card-titulo" style="font-size: 1.1rem; color: var(--cor-primaria-2);">Listas de Chamada</div>
+          <p style="font-size:0.9rem; margin-bottom: 1.2rem; color:var(--cor-texto-suave);">Acesso exclusivo para os professores e o pastor acompanharem as presenças.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+            ${linkEnsinoHtml(ensino.chamadaAdultos, '👥 Classe Adultos')}
+            ${linkEnsinoHtml(ensino.chamadaJovens, '📱 Adolescentes & Jovens')}
+            ${linkEnsinoHtml(ensino.chamadaCriancas, '🧸 Crianças (Imago Dei)')}
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA MATERIAIS -->
+      <div id="aba-ebd-materiais" class="aba-conteudo">
+        <!-- MATERIAIS ADULTOS -->
+        ${materialEnsinoHtml('adultos', adulto)}
+
+        <!-- MATERIAIS JOVENS -->
+        ${materialEnsinoHtml('jovens', jovens)}
+
+        <!-- MATERIAIS CRIANÇAS -->
+        ${materialEnsinoHtml('criancas', criancas)}
+      </div>
+
+      <div class="rodape-secao">
+        <div class="rodape-logo-text">Igreja Presbiteriana de Saloá</div>
+        <div class="rodape-versic">"Crescei na graça e no conhecimento." — 2Pe 3.18</div>
+      </div>`;
+}
+
 function textoAvisoParaHtml(texto) {
   // Converte texto corrido em parágrafos formatados igual ao boletim original
   // Linhas em branco = novo parágrafo
@@ -1654,8 +1741,16 @@ function avisosParaHtml(opcoes = {}) {
 }
 
 function obterSecoesParaAtualizar() {
+  const semanal = !!document.getElementById('toggle-semanal')?.checked;
   return {
+    semanal,
+    data: semanal,
+    devocional: semanal,
+    liturgias: semanal,
+    simbolo: semanal,
+    avisos: !!document.getElementById('toggle-avisos')?.checked,
     aniversariantes: !!document.getElementById('toggle-aniversariantes')?.checked,
+    ensino: !!document.getElementById('toggle-ensino')?.checked,
     institucional: !!document.getElementById('toggle-institucional')?.checked,
     planejamento: !!document.getElementById('toggle-planejamento')?.checked
   };
@@ -1663,17 +1758,20 @@ function obterSecoesParaAtualizar() {
 
 function montarResumoAtualizacao() {
   const secoes = obterSecoesParaAtualizar();
-  const atualizar = [
-    'Data da capa e título da página',
-    'Devocional da semana',
-    'Liturgia da Escola Dominical e do Culto de Celebração',
-    'Símbolo de fé da edição',
-    'Avisos cadastrados na aba Avisos'
-  ];
+  const atualizar = [];
   const manter = [];
+
+  if (secoes.semanal) atualizar.push('Semanal: data, devocional, liturgias e símbolo de fé');
+  else manter.push('Semanal: data, devocional, liturgias e símbolo de fé');
+
+  if (secoes.avisos) atualizar.push('Avisos cadastrados na aba Avisos');
+  else manter.push('Avisos cadastrados na aba Avisos');
 
   if (secoes.aniversariantes) atualizar.push('Arte de aniversariantes');
   else manter.push('Arte de aniversariantes');
+
+  if (secoes.ensino) atualizar.push('ED / Ensino: inscrição, chamadas e materiais');
+  else manter.push('ED / Ensino: inscrição, chamadas e materiais');
 
   if (secoes.institucional) {
     atualizar.push('Base institucional, dados bancários e aviso fixo de uso de imagem');
@@ -1694,15 +1792,7 @@ function preencherListaResumo(id, itens) {
 }
 
 function atualizarResumoPublicacao() {
-  const { atualizar, manter } = montarResumoAtualizacao();
-  preencherListaResumo('resumo-atualiza', atualizar);
-  preencherListaResumo('resumo-mantem', manter.length ? manter : ['Nenhuma seção extra será preservada além do fluxo semanal.']);
-  const rodape = document.getElementById('resumo-publicacao-rodape');
-  if (rodape) {
-    rodape.textContent = manter.length
-      ? 'Os itens marcados como mantidos continuam exatamente como estão no index.html publicado hoje.'
-      : 'Nesta configuração, além do fluxo semanal, todas as seções opcionais marcadas também serão atualizadas.';
-  }
+  // A confirmação visual fica apenas no modal de publicação.
 }
 
 function preencherResumoModalConfirmacao() {
@@ -1713,8 +1803,13 @@ function preencherResumoModalConfirmacao() {
   if (rodape) {
     rodape.textContent = manter.length
       ? 'Os itens mantidos continuarão exatamente como estão na versão já publicada do boletim.'
-      : 'Nesta publicação, além do fluxo semanal, todas as seções opcionais marcadas também serão atualizadas.';
+      : 'Nesta publicação, todos os blocos disponíveis serão atualizados.';
   }
+}
+
+function setToggle(id, checked) {
+  const el = document.getElementById(id);
+  if (el) el.checked = checked;
 }
 
 let resolverModalPublicacao = null;
@@ -1909,62 +2004,86 @@ function substituirMarcador(h, chave, novoConteudo) {
   return h.replace(re, `<!--PAINEL:${chave}-->${novoConteudo}<!--/PAINEL:${chave}-->`);
 }
 
+function substituirUsoImagem(h, novoConteudo) {
+  const re = /<div class="card" id="uso-imagem"[\s\S]*?<\/div>\s*(?=<!--\/PAINEL:AVISOS-->|\n\s*<div class="card")/;
+  return re.test(h) ? h.replace(re, novoConteudo.trim()) : h;
+}
+
 function patchHtml(htmlOriginal, d) {
   let h = htmlOriginal;
 
   // ── título da página
-  h = h.replace(/<title>[^<]*<\/title>/, `<title>Boletim IP Saloá — ${d.data}</title>`);
+  if (d.secoes?.data) {
+    h = h.replace(/<title>[^<]*<\/title>/, `<title>Boletim IP Saloá — ${d.data}</title>`);
 
-  // ── data na capa
-  h = substituirMarcador(h, 'DATA', d.data);
+    // ── data na capa
+    h = substituirMarcador(h, 'DATA', d.data);
 
-  // ── cabeçalho liturgia ED e Celebração
-  h = h.replace(
-    /<div class="lit-celebracao-titulo">[\s\S]*?<\/div>/,
-    `<div class="lit-celebracao-titulo">ESCOLA DOMINICAL – ${d.dataFmt}</div>`
-  );
-  h = h.replace(
-    /(<div id="aba-lit-celebracao"[\s\S]*?<div class="lit-celebracao-cabecalho">\s*)<div class="lit-celebracao-titulo">[\s\S]*?<\/div>/,
-    `$1<div class="lit-celebracao-titulo">CULTO DE CELEBRAÇÃO – ${d.dataFmt}</div>`
-  );
+    // ── cabeçalho liturgia ED e Celebração
+    h = h.replace(
+      /<div class="lit-celebracao-titulo">[\s\S]*?<\/div>/,
+      `<div class="lit-celebracao-titulo">ESCOLA DOMINICAL – ${d.dataFmt}</div>`
+    );
+    h = h.replace(
+      /(<div id="aba-lit-celebracao"[\s\S]*?<div class="lit-celebracao-cabecalho">\s*)<div class="lit-celebracao-titulo">[\s\S]*?<\/div>/,
+      `$1<div class="lit-celebracao-titulo">CULTO DE CELEBRAÇÃO – ${d.dataFmt}</div>`
+    );
+  }
 
   // ── Devocional — via marcadores
-  h = substituirMarcador(h, 'DEVOC_TITULO', d.devocTitulo);
-  h = substituirMarcador(h, 'DEVOC_REF', d.devocRef);
-  // Corpo: parágrafos + assinatura
-  const devocBlocoNovo = `\n        ${d.devocTexto}\n        <div class="assinatura">${d.devocAutor}</div>\n      `;
-  h = substituirMarcador(h, 'DEVOC_CORPO', devocBlocoNovo);
+  if (d.secoes?.devocional) {
+    h = substituirMarcador(h, 'DEVOC_TITULO', d.devocTitulo);
+    h = substituirMarcador(h, 'DEVOC_REF', d.devocRef);
+    // Corpo: parágrafos + assinatura
+    const devocBlocoNovo = `\n        ${d.devocTexto}\n        <div class="assinatura">${d.devocAutor}</div>\n      `;
+    h = substituirMarcador(h, 'DEVOC_CORPO', devocBlocoNovo);
+  }
 
   // ── Liturgia ED e Celebração
-  h = h.replace(
-    /(<div id="aba-lit-matutino"[\s\S]*?<div class="lit-celebracao-subtitulo">LITURGIA<\/div>\s*<\/div>\s*)([\s\S]*?)(<\/div>\s*<\/div>\s*<!-- ABA CELEBRAÇÃO)/,
-    `$1\n          ${d.litEdHtml}\n        $3`
-  );
-  h = h.replace(
-    /(<div id="aba-lit-celebracao"[\s\S]*?<div class="lit-celebracao-subtitulo">LITURGIA<\/div>\s*<\/div>\s*)([\s\S]*?)(<\/div>\s*<\/div>\s*<div class="rodape-secao")/,
-    `$1\n          ${d.litCelHtml}\n        $3`
-  );
+  if (d.secoes?.liturgias) {
+    h = h.replace(
+      /(<div id="aba-lit-matutino"[\s\S]*?<div class="lit-celebracao-subtitulo">LITURGIA<\/div>\s*<\/div>\s*)([\s\S]*?)(<\/div>\s*<\/div>\s*<!-- ABA CELEBRAÇÃO)/,
+      `$1\n          ${d.litEdHtml}\n        $3`
+    );
+    h = h.replace(
+      /(<div id="aba-lit-celebracao"[\s\S]*?<div class="lit-celebracao-subtitulo">LITURGIA<\/div>\s*<\/div>\s*)([\s\S]*?)(<\/div>\s*<\/div>\s*<div class="rodape-secao")/,
+      `$1\n          ${d.litCelHtml}\n        $3`
+    );
+  }
 
   // ── Símbolo de Fé — via marcadores
-  h = substituirMarcador(h, 'CATEC_NOME', d.catecNome);
-  h = substituirMarcador(h, 'CATEC_PERG', d.catecPerg);
-  h = substituirMarcador(h, 'CATEC_RESP', superscritosParaHtml(d.catecResp));
-  if (d.catecRefsHtml) {
-    h = substituirMarcador(h, 'CATEC_REFS', d.catecRefsHtml);
+  if (d.secoes?.simbolo) {
+    h = substituirMarcador(h, 'CATEC_NOME', d.catecNome);
+    h = substituirMarcador(h, 'CATEC_PERG', d.catecPerg);
+    h = substituirMarcador(h, 'CATEC_RESP', superscritosParaHtml(d.catecResp));
+    if (d.catecRefsHtml) {
+      h = substituirMarcador(h, 'CATEC_REFS', d.catecRefsHtml);
+    }
   }
 
   // ── Avisos — via marcador
-  let avisosHtmlFinal = d.avisosHtml;
-  if (d.secoes?.institucional) {
-    avisosHtmlFinal += d.usoImagemHtml || '';
-  } else {
-    avisosHtmlFinal += extrairAvisoUsoImagem(htmlOriginal);
+  if (d.secoes?.avisos) {
+    let avisosHtmlFinal = d.avisosHtml;
+    if (d.secoes?.institucional) {
+      avisosHtmlFinal += d.usoImagemHtml || '';
+    } else {
+      avisosHtmlFinal += extrairAvisoUsoImagem(htmlOriginal);
+    }
+    h = substituirMarcador(h, 'AVISOS', '\n' + avisosHtmlFinal + '\n\n      ');
+  } else if (d.secoes?.institucional) {
+    h = substituirUsoImagem(h, d.usoImagemHtml || '');
   }
-  h = substituirMarcador(h, 'AVISOS', '\n' + avisosHtmlFinal + '\n\n      ');
 
   // ── Aniversariantes — via marcador
   if (d.secoes?.aniversariantes) {
     h = substituirMarcador(h, 'ANIV', d.anivHtml + '\n      ');
+  }
+
+  if (d.secoes?.ensino) {
+    h = h.replace(
+      /(<section class="secao" id="escola-dominical">[\s\S]*?<div class="secao-corpo">)([\s\S]*?)(\s*<\/div>\s*<\/section>\s*<section class="secao" id="historia">)/,
+      `$1${ensinoParaHtml(d.ensino)}$3`
+    );
   }
 
   if (d.secoes?.institucional) {
@@ -2105,6 +2224,7 @@ async function publicar() {
     }
 
     const secoes = obterSecoesParaAtualizar();
+    const ensino = coletarEnsinoDados();
     const avisosHtml = avisosParaHtml({ incluirUsoImagem: false });
     const usoImagemHtml = usoImagemParaHtml();
     const anivHtml = aniversariantesParaHtml();
@@ -2137,6 +2257,7 @@ async function publicar() {
       litEdHtml, litCelHtml,
       catecNome, catecPerg, catecResp, catecRefsHtml,
       avisosHtml, usoImagemHtml, anivHtml,
+      ensino,
       pastor, consMembros, consPresidente, consVice, consSecretario, consRepresentante,
       diaconos, ebdLider,
       banco, agencia, conta, pix,
@@ -2198,6 +2319,7 @@ function salvarRascunho() {
     'pastor-nome','conselho-membros','conselho-presidente','conselho-vice',
     'conselho-secretario','conselho-representante','diaconos-lista','ebd-lideranca',
     'banco-nome','banco-agencia','banco-conta','banco-pix',
+    'ensino-inscricao-link','ensino-chamada-adultos','ensino-chamada-jovens','ensino-chamada-criancas',
     'uso-imagem-texto','uso-imagem-nome'];
   const dados = {};
   campos.forEach(id => { const el = document.getElementById(id); if (el) dados[id] = el.value; });
@@ -2205,6 +2327,7 @@ function salvarRascunho() {
   // Avisos SEM imagens (base64 é grande demais)
   dados['_avisos'] = avisos.map(av => ({ ...av, imagemBase64: '' }));
   dados['_aniversariantes'] = aniversariantes;
+  dados['_ensino_series'] = ensinoSeries;
   dados['_atualizar_secoes'] = obterSecoesParaAtualizar();
   const tipoEl = document.getElementById('uso-imagem-tipo');
   dados['_uso_imagem_tipo'] = tipoEl ? tipoEl.value : 'texto';
@@ -2236,10 +2359,21 @@ function carregarRascunho() {
         renderAniversariantes();
         return;
       }
+      if (id === '_ensino_series') {
+        ensinoSeries = dados[id] || ensinoSeries;
+        renderEnsinoSeries();
+        return;
+      }
       if (id === '_atualizar_secoes') {
         const secoes = dados[id] || {};
+        if (typeof secoes.semanal !== 'boolean') {
+          secoes.semanal = !!(secoes.data || secoes.devocional || secoes.liturgias || secoes.simbolo);
+        }
         const map = {
+          semanal: 'toggle-semanal',
+          avisos: 'toggle-avisos',
           aniversariantes: 'toggle-aniversariantes',
+          ensino: 'toggle-ensino',
           institucional: 'toggle-institucional',
           planejamento: 'toggle-planejamento'
         };
@@ -2276,7 +2410,7 @@ function ativarAutosaveEditor() {
     el.addEventListener('input', salvarRascunho);
     el.addEventListener('change', salvarRascunho);
   });
-  ['toggle-aniversariantes', 'toggle-institucional', 'toggle-planejamento'].forEach(id => {
+  ['toggle-semanal', 'toggle-avisos', 'toggle-aniversariantes', 'toggle-ensino', 'toggle-institucional', 'toggle-planejamento'].forEach(id => {
     const el = document.getElementById(id);
     if (!el) return;
     el.addEventListener('change', atualizarResumoPublicacao);
@@ -2315,6 +2449,7 @@ document.addEventListener('DOMContentLoaded', () => {
   atualizarStatusToken();
   renderAvisos();
   renderAniversariantes();
+  renderEnsinoSeries();
   renderPlanejamento();
   carregarRascunho();
   atualizarResumoPublicacao();
